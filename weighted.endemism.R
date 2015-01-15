@@ -78,7 +78,7 @@ weighted.endemism <- function(species_records, records="single", site.coords, sp
 #
 #References --
 #
-#A strictly geographical implementation of weighted endemism
+#A strictly georeferenced implementation of weighted endemism
 #
 #License --
 #
