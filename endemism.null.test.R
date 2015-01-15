@@ -58,7 +58,7 @@ endemism.null.test <- function(weighted.endemism.output, nrep = 100, outlier.ran
 #
 #References --
 #
-#A strictly geographical implementation of weighted endemism
+#A strictly georeferenced implementation of weighted endemism
 #
 #License --
 #
