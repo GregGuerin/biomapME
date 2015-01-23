@@ -78,7 +78,7 @@ weighted.endemism <- function(species_records, records="single", site.coords, sp
 #
 #References --
 #
-#A strictly georeferenced implementation of weighted endemism
+#Guerin, G.R., Ruokolainen, L. & Lowe, A.J. (in review) A strictly georeferenced implementation of weighted endemism. Methods in Ecology and Evolution.
 #
 #License --
 #
