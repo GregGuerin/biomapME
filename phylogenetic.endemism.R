@@ -267,7 +267,6 @@ phylogenetic.endemism <- function(species_records, records="single", site.coords
 	
 	
 	
-	
 	if(pe.type == "weighted") {
 		
 		if(!(missing(own.phylo.cell.matrix))) {
