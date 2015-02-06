@@ -2,7 +2,7 @@ pe.null.test <- function(phylogenetic.endemism.output, nrep = 100, outlier.range
 #
 #Description --
 #
-#Taking the outputs from the 'phylogenetic.endemism' function, tests whether observed phylogenetic diversity/endemism is higher than expected, using non-parametric methods
+#Taking the outputs from the 'phylogenetic.endemism’ function, tests whether observed phylogenetic diversity/endemism is higher than expected, using non-parametric methods
 #
 #Usage --
 #
@@ -18,7 +18,7 @@ pe.null.test <- function(phylogenetic.endemism.output, nrep = 100, outlier.range
 #
 #nrep : desired number of replicates when generating a null distribution from a random draw of species. Default is 100 for speed (slow for large datasets), but at least 1000 is recommended to ensure smooth null distributions and useful p-values
 #
-#pe.type="weighted": refers back to how phylogenetic.endemism.R was run; alternatively set to pe.type="unweighted" for phylogenetic diversity with edge length uweighted by range size if this was the original setting.
+#pe.type="weighted": refers back to how phylogenetic.endemism.R was run; alternatively set to pe.type="unweighted" for phylogenetic diversity with edge length uweighted by range size if this was the original setting (in which case 'phylo.tree' must be supplied).
 #
 #phylo.tree: the phylogenetic tree that was used to run phylogenetic.endemism.R, only required for testing unweighted pd (pe.type="unweighted").
 #
@@ -62,11 +62,11 @@ pe.null.test <- function(phylogenetic.endemism.output, nrep = 100, outlier.range
 #
 #References --
 #
-#Guerin, G.R. & Lowe, A.J. (to be submitted in early 2015) Mapping phylogenetic endemism in R using georeferenced branch extents. [Methods in Ecology and Evolution]
+#Guerin, G.R. & Lowe, A.J. (submitted) Mapping phylogenetic endemism in R using georeferenced branch extents. Methods in Ecology and Evolution
 #
 #License --
 #
-#GPL-3
+#GNU GPL-3
 #
 {
 	require(raster)
@@ -93,15 +93,16 @@ pe.null.test <- function(phylogenetic.endemism.output, nrep = 100, outlier.range
 		if(!(class(phylogenetic.endemism.output$PD) == "numeric" & class(phylogenetic.endemism.output$PD_raster) == "RasterLayer" & class(phylogenetic.endemism.output$grid.matrix) == "data.frame")) {
 		stop("Input data are not in required format: $PD (numeric), $PD_raster (RasterLayer), $grid.matrix (data.frame)")
 	}#cls if not correect object classes
+	if(missing(phylo.tree)) {stop("Please provide 'phylo.tree'")}
 	} #cls if unweighted
 	
 	
 				
 	cat("Calculating species random sample probabilities and species richness", "\n")
 	probs <- colSums(phylogenetic.endemism.output$grid.matrix)/nrow(phylogenetic.endemism.output$grid.matrix) 
-	richness <- rowSums(phylogenetic.endemism.output$grid.matrix)
+	richness <- rowSums(phylogenetic.endemism.output$grid.matrix)[which(rownames(phylogenetic.endemism.output$grid.matrix) %in% names(phylogenetic.endemism.output$PD))]
 	
-	plot(phylogenetic.endemism.output$PD ~ richness, pch=20, cex=0.6, main = "PE v species richness (black = observed, red = null)") 
+	plot(phylogenetic.endemism.output$PD ~ richness[names(phylogenetic.endemism.output$PD)], pch=20, cex=0.6, main = "PE v species richness (black = observed, red = null)") 
 	
 	cat("Generating null distributions for range of observed species richness:", "\n")
 	n <- 0
@@ -155,7 +156,7 @@ pe.null.test <- function(phylogenetic.endemism.output, nrep = 100, outlier.range
 	names(Quantile.50) <- sort(unique(richness))
 	
 	dev.new()
-	plot(phylogenetic.endemism.output$PD ~ richness, pch=20, cex=0.1, main = "PE v species richness (black = observed, red = null IQR)")
+	plot(phylogenetic.endemism.output$PD ~ richness[names(phylogenetic.endemism.output$PD)], pch=20, cex=0.1, main = "PE v species richness (black = observed, red = null IQR)")
 	points(sort(unique(richness)), Quantile.75, type="l", lwd=2, col="red")
 	points(sort(unique(richness)), Quantile.25, type="l", lwd=2, col="red")
 
@@ -224,7 +225,7 @@ pe.null.test <- function(phylogenetic.endemism.output, nrep = 100, outlier.range
 	
 	
 	cat("Collating outputs", "\n")
-	outputs <- list(Quantile.25 = Quantile.25, Quantile.75 = Quantile.75, out.above.below = out.above.below, out.above.below.raster = out.above.below.raster, out.continuous = out.continuous, out.continuous.raster = out.continuous.raster, P.above = P.above, P.above.raster = P.above.raster, richness = richness)
+	outputs <- list(Quantile.25 = Quantile.25, Quantile.75 = Quantile.75, out.above.below = out.above.below, out.above.below.raster = out.above.below.raster, out.continuous = out.continuous, out.continuous.raster = out.continuous.raster, P.above = P.above, P.above.raster = P.above.raster, richness = richness[names(phylogenetic.endemism.output$PD)])
 	return(outputs)
 
 			

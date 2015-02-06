@@ -13,24 +13,17 @@ phylogenetic.endemism <- function(species_records, records="single", site.coords
 #Usage --
 #
 #For example:
-#####Preparation for this example:
-#require(vegan) #load the vegan package
-#data(mite)
-#data(mite.xy) #load datasets from vegan
-#require(ape) #for rtree function:
-#mite.tree <- rtree(n=ncol(mite), tip.label=colnames(mite)) #for this example, generate a phylogenetic tree of the species in the mite dataset with random relationships and branch lengths
-####Usage of the function:
-#mite.PE <- phylogenetic.endemism(mite, records="site", site.coords=mite.xy, sep.comm.spp="none", phylo.tree=mite.tree, sep.phylo.spp="none", weight.type="geo")
+#####Preparation for this example:#require(vegan) #load the vegan package#data(mite)#data(mite.xy) #load datasets from vegan#require(ape) #for rtree function:#mite.tree <- rtree(n=ncol(mite), tip.label=colnames(mite)) #for this example, generate a phylogenetic tree of the species in the mite dataset with random relationships and branch lengths####Usage of the function:#mite.PE <- phylogenetic.endemism(mite, records="site", site.coords=mite.xy, sep.comm.spp="none", phylo.tree=mite.tree, sep.phylo.spp="none", weight.type="geo")
 #
 #Arguments --
 #
 #species_records: a data.frame, either with:
-#a) rows as individual species records, and columns that include fields for species name, longitude and latitude (see species, longitude, latitude below); or
-#b) rows as sites and columns as species, in which case site.coords (below) must also be supplied
+#a) rows as individual species records, and columns that include fields for species name, longitude and latitude (see ‘species’, ‘longitude’, ‘latitude’ below); or
+#b) rows as sites and columns as species, in which case ‘site.coords’ (below) must also be supplied
 #
 #records: are the species_records in single/long format (the default, records="single") or in site-based/short format (records="site")
 #
-#site.coords: for site-based data (records="site"), a data.frame with rows as sites (/field plots) (names match the row names of species_records) and their longlat coordinates: first column must be x/longitude, second column y/latitude
+#site.coords: for site-based data (records="site"), a data.frame with rows as sites (/field plots) (names match the row names of species_records) and their geographic longlat coordinates: first column must be x/longitude, second column y/latitude
 #
 #species: for records="single" (i.e. individual occurrence data); what colname in the supplied species_records contains species names?
 #
@@ -38,11 +31,11 @@ phylogenetic.endemism <- function(species_records, records="single", site.coords
 #
 #longitude: for records="single"; what colname in the supplied species_records contains longitude values?
 #
-#sep.comm.spp: the genus_species separating character in the community data. If there is none (i.e. taxon names represented by a single 'word'), argument should be set to "none". The purpose of this argument is that it is common for separators to differ between community data and tree due to the different processing functions applied, and to avoid having to reformat the data, this argument allows them to be matched within the function. Default is a space.
+#sep.comm.spp: the genus_species separating character in the community data. If there is none (i.e. taxon names represented by a single 'word'), argument should be set to sep.comm.spp=“none". The purpose of this argument is that it is common for separators to differ between community data and tree due to the different processing functions applied, and to avoid having to reformat the data, this argument allows them to be matched within the function. Default is a space.
 #
 #phylo.tree: a phylogenetic tree of class 'phylo' containing species in the occurrence data. Must have branch lengths.
 #
-#sep.phylo.spp: the genus_species separating character in the phylo.tree (tip.labels). If there is none (i.e. taxon names represented by a single 'word'), argument should be set to "none". See sep.comm.spp argument for purpose. Default for phylo.tree is an underscore, as this is a common format in community ecology using e.g. phylomatic trees.
+#sep.phylo.spp: the genus_species separating character in the phylo.tree (tip.labels). If there is none (i.e. taxon names represented by a single 'word'), argument should be set to sep.phylo.spp=“none". See sep.comm.spp argument for purpose. Default for phylo.tree is an underscore, as this is a common format in community ecology using e.g. phylomatic trees.
 #
 #frame.raster: an existing raster object. User can elect to supply a raster as the frame for calculations and mapping. If not specified, the function will generate a raster based on default or specified extent and resolution.
 #
@@ -56,9 +49,9 @@ phylogenetic.endemism <- function(species_records, records="single", site.coords
 #
 #outlier_pct: for the calculation of range 'span' via convex polygons, this argument can be used to remove outliers on a percentage basis via the 'mcp' function in package adehabitat, i.e. 95 (default) means 5% most outlying points are removed.
 # 
-#own.weights: an optional user-supplied numeric vector of branch length weights for calculating phylogenetic endemism. This argument is intended mainly so that time consuming calculation of georeferenced weights can be done once and the result stored and used for subsequent re-runs. Alternatively, user-calculated weights can be used in subsequent runs. The weights must be matched to a matrix representation of phylo.tree.
+#own.weights: an optional user-supplied numeric vector of branch length weights for calculating phylogenetic endemism. This argument is intended mainly so that time consuming calculation of georeferenced weights can be done once and the result stored and used for subsequent re-runs. Alternatively, user-calculated weights can be used in subsequent runs. The weights must be matched to a matrix representation of phylo.tree (see below).
 #
-#own.grid.matrix: user supplied binary matrix of species against grid cell numbers, rather than this being generated within the function. The purpose of this argument is that, given the step can be time consuming for large datasets, the equivalent matrix can be generated in weighted.endemism.R and then used here to save time. Must be provided if own.phylo.cell.matrix is supplied-- although the function no longer requires the grid.matrix, it is still needed for inclusion in the outputs, so that they can be subsequently fed into the pe.null.test.R function (which does requires the grid.matrix...). If supplied, a frame.raster must also be supplied that has cell numbers which match the row.names of the own.grid.matrix ($WE_raster, from weighted.endemism.R output for example). Assumes that genus/species words are separated by the sep.phylo.spp, as this is how the grid.matrix is returned from the function originally
+#own.grid.matrix: user supplied binary matrix of species against grid cell numbers, rather than this being generated within the function. The purpose of this argument is to save time for repeat runs, given the step can be time consuming for large datasets. Must be provided if own.phylo.cell.matrix is supplied-- although the function no longer requires the grid.matrix, it is still needed for inclusion in the outputs, so that they can be subsequently fed into the pe.null.test.R function (which does requires the grid.matrix...). If supplied, a frame.raster must also be supplied that has cell numbers which match the row.names of the own.grid.matrix. Assumes that genus/species words are separated by the sep.phylo.spp, as this is how the grid.matrix is returned from the function originally
 #
 #own.phylo.cell.matrix : user can supply the matrix representing occurrences of phylogenetic branches in map grid cells from previous runs to save computation time (i.e. $phylo.cell.matrix of a previous phylogenetic.endemism.R output). A matching 'frame.raster' must also be supplied.
 #
@@ -77,16 +70,16 @@ phylogenetic.endemism <- function(species_records, records="single", site.coords
 #
 #$PD_raster: raster map with phylogenetic diversity/endemism scores.
 #
-#$grid.matrix : a binary data.frame of species against grid cell numbers used in the function which is returned so that it can be re-used to save computation time, for example, with the weighted.endemism.R function on the same dataset, and because it is required in the downstream pe.null.test.R function to calculated species sample probabilities. 
+#$grid.matrix : a binary data.frame of species against grid cell numbers used in the function which is returned so that it can be re-used to save computation time, and because it is required in the downstream pe.null.test.R function to calculated species sample probabilities. Note that this only includes species that are found in the phylo.tree
 #
 #PE only:
 #$ranges : a named numeric vector of weights used to calculate endemism (equivalent to range size in metres if weight.type="geo", range size in cells if weight.type="cell" (default), or the user supplied weights if own.weights was supplied) (skipped if pe.type="unweighted").
 #
 #$phyloMatrix : a binary matrix representation of the phylo.tree, returned mainly for convenience for downstream use (skipped if pe.type="unweighted").
 #
-#$phylo.cell.matrix : a binary matrix recording the presence of particular phylogenetic branches in map grid cells used in the function, which is returned for re-use in susequent runs for efficiency (e.g. with different weights), (skipped if pe.type="unweighted").
+#$phylo.cell.matrix : a binary matrix recording the presence of particular phylogenetic branches in map grid cells used in the function, which is returned for re-use in subsequent runs for efficiency (e.g. with different weights), (skipped if pe.type="unweighted").
 #
-#$edge.lengths : a numeric vecto of edge lengths from phylo.tree
+#$edge.lengths : a numeric vector of edge lengths from phylo.tree
 #
 #Required packages --
 #
@@ -98,11 +91,11 @@ phylogenetic.endemism <- function(species_records, records="single", site.coords
 #
 #References --
 #
-#Guerin, G.R. & Lowe, A.J. (to be submitted early 2015) Mapping phylogenetic endemism in R using georeferenced branch extents. [Methods in Ecology and Evolution]
+#Guerin, G.R. & Lowe, A.J. (submitted) Mapping phylogenetic endemism in R using georeferenced branch extents. Methods in Ecology and Evolution
 #
 #License --
 #
-#GPL-3
+#GNU GPL-3
 #
 {
 	require(raster)
@@ -181,39 +174,12 @@ phylogenetic.endemism <- function(species_records, records="single", site.coords
 	
 	
 	if(pe.type == "unweighted") {
-		
-		if(sep.comm.spp != "none") {
-			#match species name formatting to phylo.tree. NOTE this generates '2 word' species names
-			cat("Re-formatting species names", "\n")
-			removethis <- strsplit(as.character(species_records$SPECIES), sep.comm.spp, fixed=TRUE)
-			removethis <- unlist(lapply(removethis, function(x) paste(x[1], x[2], sep=sep.phylo.spp)))
-			species_records$SPECIES <- factor(removethis)
-		} #close if(sep.comm...
-		
-		
-		
-		phyloDfunc <- function(x,...) {
-			x <- as.character(unique(na.omit(x)))
-			if(length(x) < 2) {value <- NA} else {
-				sub.tree <- drop.tip(phylo.tree, which(!phylo.tree$tip.label %in% x))
-				value <- sum(sub.tree$edge.length)
-				}
-				return(value)
-			}
-		
-		cat("Rasterizing phylogenetic data", "\n")
-		phyloDraster <- rasterize(species_records, frame.raster, fun=phyloDfunc, field="SPECIES")
-		if(plot.raster == TRUE) {
-			dev.new()
-			plot(phyloDraster, main = "Phylogenetic diversity")
-		} #cls if(plot.raster...
-		
+						
 		
 		if(!(missing(own.grid.matrix))) {
 		cat("Reading user-defined gridded occurrence matrix", "\n")
 		if(class(own.grid.matrix) != "data.frame") {stop("Supplied own.grid.matrix must be a data.frame")}
 		cell_occur_matrix <- own.grid.matrix
-		
 		} #clse if(!(missing(own.grid...
 	
 	
@@ -222,7 +188,7 @@ phylogenetic.endemism <- function(species_records, records="single", site.coords
 			
 			if(sep.comm.spp != "none") {
 				cat("Re-formatting species names", "\n") #this is to ensure mama() does not replace spaces with dots between genus/species
-				removethis <- strsplit(as.character(species_records$SPECIES), sep.phylo.spp, fixed=TRUE)
+				removethis <- strsplit(as.character(species_records$SPECIES), sep.comm.spp, fixed=TRUE)
 				removethis <- unlist(lapply(removethis, function(x) paste(x[1], x[2], sep="_", fixed=TRUE)))
 				species_records$SPECIES <- factor(removethis)
 			} #close if(sep.comm.spp...
@@ -242,7 +208,6 @@ phylogenetic.endemism <- function(species_records, records="single", site.coords
 		
 		
 		if(sep.comm.spp != "none") {
-			#NOTE, assumes two words needed for species names only. Because mama() turns spaces into dots, and either comm or phy data could have spaces, must repeat this step.	
 			removethis <- strsplit(as.character(colnames(cell_occur_matrix)), "_", fixed=TRUE)
 			removethis <- unlist(lapply(removethis, function(x) paste(x[1], x[2], sep=sep.phylo.spp)))
 			colnames(cell_occur_matrix) <- factor(removethis)
@@ -258,19 +223,49 @@ phylogenetic.endemism <- function(species_records, records="single", site.coords
 		#trim excess tips in phylo.tree that aren't in cell_occur_matrix
 		phylo.tree <- drop.tip(phylo.tree, which(!(phylo.tree$tip.label %in% colnames(cell_occur_matrix))))
 
-		#### ####
+
+
+		cat("Calculating phylogenetic diversity", "\n")
+		
+		PDmatFunc <- function(x, phylo.tree) {
+			x <- x[,which(x>0)]
+			drops <- setdiff(phylo.tree$tip.label, colnames(x))
+			if(class(x) == "data.frame") {sub <- drop.tip(phylo.tree, drops)
+			return(sum(sub$edge.length))} else {return(NA)}
+			}
+		
+		PD <- list()
+		for(i in 1:nrow(cell_occur_matrix)) {
+			cell_row <- cell_occur_matrix[i,]
+			PD[i] <- PDmatFunc(x=cell_row, phylo.tree=phylo.tree)
+			}
+		PD <- unlist(PD)
+		names(PD) <- row.names(cell_occur_matrix)
+		PD <- PD[!is.na(PD)]
+		
+
+		
+		phyloDraster <- frame.raster
+		phyloDraster[] <-  NA
+		phyloDraster[as.numeric(as.character(names(PD)))] <- PD
+		
+		
+		if(plot.raster == TRUE) {
+			dev.new()
+			plot(phyloDraster, main = "Phylogenetic diversity")
+		} #cls if(plot.raster...
 		
 		
 		cat("Collating outputs", "\n")
 		output <- list()
 		output$PD_raster <- phyloDraster
-		PD <- values(phyloDraster)[!is.na(values(phyloDraster))] #extract non-NA values
-		names(PD) <- which(!is.na(values(phyloDraster)))#assign names as cell numbers which values came from
 		output$PD <- PD
 		output$grid.matrix <- cell_occur_matrix
 		return(output)
-		
+				
 	} #cls if pe.type= unweighted
+	
+	
 	
 	
 	if(pe.type == "weighted") {
