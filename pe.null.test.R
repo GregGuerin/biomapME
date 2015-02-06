@@ -96,7 +96,6 @@ pe.null.test <- function(phylogenetic.endemism.output, nrep = 100, outlier.range
 	if(missing(phylo.tree)) {stop("Please provide 'phylo.tree'")}
 	} #cls if unweighted
 	
-	
 				
 	cat("Calculating species random sample probabilities and species richness", "\n")
 	probs <- colSums(phylogenetic.endemism.output$grid.matrix)/nrow(phylogenetic.endemism.output$grid.matrix) 
