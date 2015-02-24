@@ -58,7 +58,7 @@ endemism.null.test <- function(weighted.endemism.output, nrep = 100, outlier.ran
 #
 #References --
 #
-#Guerin, G.R., Ruokolainen, L. & Lowe, A.J. (in review) A strictly georeferenced implementation of weighted endemism. Methods in Ecology and Evolution.
+#Guerin, G.R., Ruokolainen, L. & Lowe, A.J. (in press) A georeferenced implementation of weighted endemism. Methods in Ecology and Evolution.
 #
 #License --
 #
