@@ -51,7 +51,7 @@ map.pa.matrix <- function(species_records, records="single", site.coords, specie
 #
 #References --
 #
-#Guerin, G.R., Ruokolainen, L. & Lowe, A.J. (in press) A georeferenced implementation of weighted endemism. Methods in Ecology and Evolution
+#Guerin, G.R., Ruokolainen, L. & Lowe, A.J. (2015) A georeferenced implementation of weighted endemism. Methods in Ecology and Evolution. DOI: 10.1111/2041-210X.12361
 #
 #License --
 #
