@@ -13,7 +13,8 @@ phylogenetic.endemism <- function(species_records, records="single", site.coords
 #Usage --
 #
 #For example:
-#####Preparation for this example:#require(vegan) #load the vegan package#data(mite)#data(mite.xy) #load datasets from vegan#require(ape) #for rtree function:#mite.tree <- rtree(n=ncol(mite), tip.label=colnames(mite)) #for this example, generate a phylogenetic tree of the species in the mite dataset with random relationships and branch lengths####Usage of the function:#mite.PE <- phylogenetic.endemism(mite, records="site", site.coords=mite.xy, sep.comm.spp="none", phylo.tree=mite.tree, sep.phylo.spp="none", weight.type="geo")
+#####Preparation for this example:#library(vegan) #load the vegan package#data(mite)#data(mite.xy) #load datasets from vegan#library(ape) #for rtree function:#mite.tree <- rtree(n=ncol(mite), tip.label=colnames(mite)) #for this example, generate a phylogenetic tree of the species in the mite dataset with random relationships and branch lengths####Usage of the function:
+#source(“phylogenetic.endemism.R”)#mite.PE <- phylogenetic.endemism(mite, records="site", site.coords=mite.xy, sep.comm.spp="none", phylo.tree=mite.tree, sep.phylo.spp="none", weight.type="geo")
 #
 #Arguments --
 #
@@ -91,7 +92,7 @@ phylogenetic.endemism <- function(species_records, records="single", site.coords
 #
 #References --
 #
-#Guerin, G.R. & Lowe, A.J. (submitted) Mapping phylogenetic endemism in R using georeferenced branch extents. Methods in Ecology and Evolution
+#Guerin, G.R. and Lowe, A.J. (submitted) Mapping phylogenetic endemism in R using georeferenced branch extents. Ecography
 #
 #License --
 #

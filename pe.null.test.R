@@ -9,7 +9,7 @@ pe.null.test <- function(phylogenetic.endemism.output, nrep = 100, outlier.range
 #For example:
 #
 #mite.PE <- phylogenetic.endemism(mite, records="site", site.coords=mite.xy, sep.comm.spp="none", phylo.tree=mite.tree, sep.phylo.spp="none", weight.type="geo")
-#
+#source(“pe.null.test.R”)
 #pe.mite.test <- pe.null.test(mite.PE)
 #
 #Arguments
@@ -62,7 +62,7 @@ pe.null.test <- function(phylogenetic.endemism.output, nrep = 100, outlier.range
 #
 #References --
 #
-#Guerin, G.R. & Lowe, A.J. (submitted) Mapping phylogenetic endemism in R using georeferenced branch extents. Methods in Ecology and Evolution
+#Guerin, G.R. and Lowe, A.J. (submitted) Mapping phylogenetic endemism in R using georeferenced branch extents. Ecography
 #
 #License --
 #
