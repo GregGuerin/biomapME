@@ -62,11 +62,15 @@ pe.null.test <- function(phylogenetic.endemism.output, nrep = 100, outlier.range
 #
 #References --
 #
-#Guerin, G.R. and Lowe, A.J. (submitted) Mapping phylogenetic endemism in R using georeferenced branch extents. Ecography
+#Guerin, G.R. and Lowe, A.J. (submitted) Mapping phylogenetic endemism in R using georeferenced branch extents.
 #
 #License --
 #
 #GNU GPL-3
+#
+#Version --
+#
+#1.0
 #
 {
 	require(raster)
