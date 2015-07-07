@@ -38,6 +38,6 @@ data.eg <- structure(list(SPECIES = structure(c(7L, 7L, 7L, 7L, 7L, 7L,
 45L, 48L, 58L, 1L, 23L, 24L, 75L, 178L, 210L, 225L, 226L, 348L, 
 396L), class = "data.frame")
 
-range.metrics(data.eg, plot.raster=TRUE)
+range.metrics(data.eg)
 
 range.metrics(data.eg, weight.type="geo")
