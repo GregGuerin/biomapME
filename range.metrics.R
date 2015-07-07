@@ -1,6 +1,6 @@
-#WARNING: this funciton is under development and has undergone limited testing
+#WARNING: this function is under development and has undergone limited testing
 #
-range.metrics <- function(species_records, species="SPECIES", longitude="LONGITUDE", latitude="LATITUDE", weight.type="cell", geo.calc="max.dist", outlier_pct=95, verbose=TRUE, frame.raster, deg.resolution=c(0.25,0.25), extent.vector, plot.raster=FALSE)
+range.metrics <- function(species_records, species="SPECIES", longitude="LONGITUDE", latitude="LATITUDE", weight.type="cell", geo.calc="max.dist", outlier_pct=95, verbose=TRUE, frame.raster, deg.resolution=c(0.25,0.25), extent.vector, plot.out=TRUE)
 #
 #Description --
 #
@@ -24,7 +24,7 @@ range.metrics <- function(species_records, species="SPECIES", longitude="LONGITU
 #
 #deg.resolution/extent.vector: arguments specifying the map resolution and extent in degrees the user wishes the calculations and mapping to use. If no frame is specified, an arbitrary resolution and extent is supplied. If a frame.raster is specified, these arguments are ignored (function bases mapping on the supplied raster)
 #
-#plot.raster: whether or not to plot rasters for cell count range scores (weight.type="cell"). Either way, the rasters are stored in the output.
+#plot.out: whether or not to plot locations and rasters for cell count range scores (weight.type="cell"). Either way, the rasters are stored in the output.
 #
 #weight.type: default is "cell" (cell-based range metrics), while "geo" will calculate geographic range weights (no rasters).
 #
@@ -89,8 +89,16 @@ range.metrics <- function(species_records, species="SPECIES", longitude="LONGITU
 	
 	coordinates(species_records) <- c("LONGITUDE", "LATITUDE")
 	
-	
-	
+	#####
+	if(plot.out == TRUE) {
+		require(maps)
+		lon.ext <- extent(species_records)[1:2]
+		lat.ext <- extent(species_records)[3:4]
+		map("world", fill=TRUE, col="gray50", bg="lightblue", ylim=c(-40,-15), xlim=c(120,150), mar=c(0,0,0,0))
+		#map("world", fill=TRUE, col="gray50", bg="lightblue", ylim=lat.ext, xlim=lon.ext, mar=c(0,0,0,0))
+		points(species_records, col= species_records$SPECIES, pch=16)
+		} #cls if(plot.out)
+	######
 	
 	
 	if(weight.type=="cell") {
@@ -121,9 +129,6 @@ range.metrics <- function(species_records, species="SPECIES", longitude="LONGITU
 	
 	frame.raster[] <- NA
 	
-	if(plot.raster == TRUE) {
-		plot(frame.raster)
-	}#cls if(plot.raster == TRUE)
 	
 	
 	cell.ranges <- function(x) { #where x is species_records (a SPDF object)
@@ -136,9 +141,10 @@ range.metrics <- function(species_records, species="SPECIES", longitude="LONGITU
 			frame.raster[occupied.cells] <- 1
 			numberOFcells <- sum(frame.raster[!is.na(frame.raster[])])
 			v[n] <- numberOFcells
-			if(plot.raster == TRUE) {
+			if(plot.out == TRUE) {
+				dev.new()
 				plot(frame.raster, main=i, breaks=c(0.5,1.5), col=topo.colors(length(unique(atriplex.records$SPECIES)))[n])
-			} #cls if(plot.raster)
+			} #cls if(plot.out)
 			names(frame.raster) <-  i
 			if(n == 1) {
 				maps <- stack(frame.raster)
@@ -275,8 +281,8 @@ range.metrics <- function(species_records, species="SPECIES", longitude="LONGITU
 
 	
 	##collate outputs
+	#		if(plot.out==TRUE) {plot(xxx, main="xxxxx")}
 	
-#		if(plot.raster==TRUE) {plot(xxx, main="xxxxx")}
 		outputs <- list(weights = ranges)
 		#outputs <- list(raster = raster, weights = ranges)
 		return(outputs)
