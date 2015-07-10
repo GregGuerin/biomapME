@@ -6,7 +6,7 @@ buffer.frags <- function(XY, radius, vegetation.base.raster)
 #
 #Usage --
 #
-#library(raster)
+#source("buffer.frags.R")
 #eg.rast <- raster()
 #extent(eg.rast) <- c(0,10, 0, 10)
 #res(eg.rast) <- c(0.5,0.5)
@@ -84,6 +84,9 @@ buffer.frags <- function(XY, radius, vegetation.base.raster)
 	if(class(vegetation.base.raster) != "RasterLayer") {
 		stop("'vegetation.base.raster' should be a RasterLayer representing vegetation or habitat presence.")
 	}
+	
+	require(raster)
+	require(SDMTools)
 	
 	n <- 0
 	dat <- list()
