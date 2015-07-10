@@ -13,10 +13,10 @@ buffer.frags <- function(XY, radius, vegetation.base.raster)
 #eg.rast[] <- NA
 #eg.rast[sample(c(1:ncell(eg.rast)), 100)] <- 1
 #plot(eg.rast)
-#points(eg.coords, pch=20, cex=2)
 #eg.coords <- data.frame(Longitude=c(3, 7), Latitude=c(4, 8))
 #row.names(eg.coords) <- c("SiteA", "SiteB")
 #eg.coords
+#points(eg.coords, pch=20, cex=2)
 #frags <- buffer.frags(eg.coords, radius=150000, vegetation.base.raster=eg.rast)
 #
 #frags <- do.call(rbind, frags) #TO CONDENSE INTO SINGLE DATA.FRAME
