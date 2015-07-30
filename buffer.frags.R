@@ -63,8 +63,8 @@ buffer.frags <- function(XY, radius, vegetation.base.raster)
 #
 {
 	if(class(XY) == "SpatialPointsDataFrame") {
-		LONG <- coordiantes(XY)[,1]
-		LAT <- coordiantes(XY)[,2]
+		LONG <- coordinates(XY)[,1]
+		LAT <- coordinates(XY)[,2]
 	}
 	
 	
