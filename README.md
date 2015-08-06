@@ -10,3 +10,5 @@ Biomap can be cited as:
 ```
 Guerin, G.R. (2015) biomap: Biodiversity Mapping Package. R package v1.0. https://github.com/GregGuerin/biomap DOI 10.5281/zenodo.23116
 ```
+
+[DOI](https://zenodo.org/badge/doi/10.5281/zenodo.23116.svg)](http://dx.doi.org/10.5281/zenodo.23116)
