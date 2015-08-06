@@ -8,7 +8,5 @@ Biomap contains a number of tested, self-contained functions but is currently un
 
 Biomap can be cited as:
 ```
-Guerin, G.R. (2015) biomap: Biodiversity Mapping Package. R package v1.0. https://github.com/GregGuerin/biomap
+Guerin, G.R. (2015) biomap: Biodiversity Mapping Package. R package v1.0. https://github.com/GregGuerin/biomap DOI 10.5281/zenodo.23116
 ```
-
-https://zenodo.org/badge/doi/10.5281/zenodo.23116.svg
