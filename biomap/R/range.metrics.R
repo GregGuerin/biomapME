@@ -151,7 +151,7 @@ range.metrics <- function(species_records, species="SPECIES", longitude="LONGITU
 			v[n] <- numberOFcells
 			if(plot.out == TRUE) {
 				dev.new()
-				plot(frame.raster, main=i, breaks=c(0.5,1.5), col=topo.colors(length(unique(atriplex.records$SPECIES)))[n])
+				plot(frame.raster, main=i, breaks=c(0.5,1.5), col=topo.colors(length(unique(species_records$SPECIES)))[n])
 			} #cls if(plot.out)
 			names(frame.raster) <-  i
 			if(n == 1) {
