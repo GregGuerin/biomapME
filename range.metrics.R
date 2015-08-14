@@ -1,5 +1,8 @@
+#Update incorporating distance and area range metrics calculated from any coordinate set (previously only longlat). For non-longlat coordinates, distance and area calculations assume a flat surface (longlat calcs assume curved surface). This would be appropriate for smaller areas where distance measures won't be as biased by curvature of the Earth's surface, so that the function can be used directly on data sets where species coordinates are not recorded in longlat, e.g. fine-scale locations within plots, or UTM coordinates within one map zone etc.
 
-range.metrics <- function(species_records, species="SPECIES", longitude="LONGITUDE", latitude="LATITUDE", weight.type="cell", geo.calc="max.dist", outlier_pct=95, verbose=TRUE, frame.raster, deg.resolution=c(0.25,0.25), extent.vector, plot.out=TRUE)
+#WARNING: function under development, has undergone limited testing
+#
+range.metrics <- function(species_records, species="SPECIES", longitude="LONGITUDE", latitude="LATITUDE", coord.type="longlat", weight.type="cell", geo.calc="max.dist", outlier_pct=95, verbose=TRUE, frame.raster, deg.resolution=c(0.25,0.25), extent.vector, plot.out=TRUE)
 #
 #Description --
 #
@@ -11,13 +14,15 @@ range.metrics <- function(species_records, species="SPECIES", longitude="LONGITU
 #
 #Arguments --
 #
-#species_records: a data.frame with rows as individual species records, and columns that include fields for species name, longitude and latitude (see species, longitude, latitude below).
+#species_records: a data.frame with rows as individual species records, and columns that include fields for species name, longitude/x and latitude/y (see species, longitude, latitude below).
 #
 #species: what colname in the supplied species_records contains species names?
 #
-#latitude: what colname in the supplied species_records contains latitude values?
+#latitude: what colname in the supplied species_records contains latitude/Y values?
 #
-#longitude: what colname in the supplied species_records contains longitude values?
+#longitude: what colname in the supplied species_records contains longitude/X values?
+#
+#coord.type: either the default of "longlat" or "custom" for any other coordinate systems. If the former, distances will be calculated in metres, if "custom", in the the same units as the XY coordinates.
 #
 #frame.raster: an existing raster object the user can optionally elect to supply as the frame for calculations and mapping
 #
@@ -33,16 +38,16 @@ range.metrics <- function(species_records, species="SPECIES", longitude="LONGITU
 #
 #Details --
 #
-#Given a list of georeferenced (longlat) species records, calculates range metrics according to user choice of number of occupied map grid cells (from a supplied raster or one automatically generated within the funciton), maximum span across the range, range area (area of polygon defined by occurrences)
+#Given a list of georeferenced (longlat) species records, calculates range metrics according to user choice of number of occupied map grid cells (from a supplied raster or one automatically generated within the function), maximum span across the range, range area (area of polygon defined by occurrences)
 #
 #Value --
 #
-#Returns a list. For cell-based frequency, contains a vector of range scores (number of cells) and a RasterStack containing a RasterLayer showing cell occupancy for each unique species. For georeferenced calculations of range, only a vector of range scores (in m or m^2)
+#Returns a list. For cell-based frequency, contains a vector of range scores (number of cells) and a RasterStack containing a RasterLayer showing cell occupancy for each unique species. For georeferenced calculations of range, only a vector of range scores (in m or m^2 if longlat coordinates used)
 #
 #
 #Required packages --
 #
-#geosphere, adehabitat, raster, maps
+#geosphere, adehabitat, raster, maps, pracma
 #
 #Authors --
 #
@@ -56,11 +61,14 @@ range.metrics <- function(species_records, species="SPECIES", longitude="LONGITU
 #
 #GPL-3
 #
+#Version --
+#1.1
 {
 	
 	require(raster)
 	require(adehabitat)
 	require(geosphere)
+	require(pracma)
 	
 	if(outlier_pct > 99 | outlier_pct < 1) {
 		stop("Outlier_pct should be a percentage")
@@ -72,13 +80,14 @@ range.metrics <- function(species_records, species="SPECIES", longitude="LONGITU
 	
 	
 	
+
 		species_records <- species_records[,c(species, longitude, latitude)]
 		colnames(species_records) <- c("SPECIES", "LONGITUDE", "LATITUDE")
-	
+		
 	
 	if(!("SPECIES" %in% colnames(species_records))) {stop("Cannot locate species data")}
-	if(!("LATITUDE" %in% colnames(species_records))) {stop("Cannot locate latitude data")}
-	if(!("LONGITUDE" %in% colnames(species_records))) {stop("Cannot locate longitude data")}
+	if(!("LATITUDE" %in% colnames(species_records))) {stop("Cannot locate latitude/y data")}
+	if(!("LONGITUDE" %in% colnames(species_records))) {stop("Cannot locate longitude/x data")}
 	if(any(is.na(species_records$LONGITUDE))) {
 		species_records <- species_records[-which(is.na(species_records$LONGITUDE)),] 
 	} #cls NA longitude
@@ -95,7 +104,7 @@ range.metrics <- function(species_records, species="SPECIES", longitude="LONGITU
 		lat.ext <- extent(species_records)[3:4]
 		map("world", fill=TRUE, col="gray50", bg="lightblue", ylim=c(-40,-15), xlim=c(120,150), mar=c(0,0,0,0))
 		#map("world", fill=TRUE, col="gray50", bg="lightblue", ylim=lat.ext, xlim=lon.ext, mar=c(0,0,0,0))
-		points(species_records, col= species_records$SPECIES, pch=16)
+		points(species_records, col=species_records$SPECIES, pch=16)
 		} #cls if(plot.out)
 	######
 	
@@ -142,7 +151,7 @@ range.metrics <- function(species_records, species="SPECIES", longitude="LONGITU
 			v[n] <- numberOFcells
 			if(plot.out == TRUE) {
 				dev.new()
-				plot(frame.raster, main=i, breaks=c(0.5,1.5), col=topo.colors(length(unique(atriplex.records$SPECIES)))[n])
+				plot(frame.raster, main=i, breaks=c(0.5,1.5), col=topo.colors(length(unique(species_records$SPECIES)))[n])
 			} #cls if(plot.out)
 			names(frame.raster) <-  i
 			if(n == 1) {
@@ -175,13 +184,21 @@ range.metrics <- function(species_records, species="SPECIES", longitude="LONGITU
 			
 		if(weight.type=="geo") {	
 			
+			
 			CalcDists <- function(longlats) { #modified from CalcDists.R, see https://gist.githubusercontent.com/sckott/931445/raw/9db1d432b2308a8861f6425f38aaabbce44eb994/CalcDists.R
 				name <- list(rownames(longlats), rownames(longlats))
 				n <- nrow(longlats)
 				z <- matrix(0, n, n, dimnames = name)
 				for (i in 1:n) {
-					for (j in 1:n) z[i, j] <- distCosine(c(longlats[j, 1], longlats[j, 2]), c(longlats[i, 1], longlats[i, 2]))
-					}
+					for (j in 1:n) {
+						if(coord.type=="longlat") {
+							z[i, j] <- distCosine(c(longlats[j, 1], longlats[j, 2]), c(longlats[i, 1], longlats[i, 2]))
+						} #cls if(missing(XY))
+						if(coord.type=="custom") {
+							z[i, j] <- sqrt(sum((c(longlats[j, 1], longlats[j, 2]) - c(longlats[i, 1], longlats[i, 2])) ^ 2))
+						} #cls if(!(missing(XY)))
+						} #cls for (j)
+					} #cls for (i)
 				z <- as.dist(z)
 				return(z)
 				} #cls CalcDists
@@ -223,15 +240,20 @@ range.metrics <- function(species_records, species="SPECIES", longitude="LONGITU
 								
 								if(geo.calc == "polygon") {
 									if(nrow(temp) < 5) {
-										polygon_area <- try(areaPolygon(temp))
+										if(coord.type=="longlat") {
+											polygon_area <- try(areaPolygon(temp))
+											} #cls if(coord.type="longlat")
+										if(coord.type=="custom") {
+											polygon_area <- try(abs(polyarea(temp[,"LONGITUDE"], temp[,"LATITUDE"])))
+										} #cls if(coord.type="custom")
 										if(class(polygon_area) == "try-error") {	
 											v[n] <- 1
-											warning("Cannot compute polygon, returning 1 m^2 as the default range area for ", i)
+											warning("Cannot compute polygon, returning 1 as the default range area for ", i)
 										} #cls if(class(polygon_area)...
 										if(class(polygon_area) == "numeric") {										
 											if(polygon_area == 0) {
 												v[n] <- 1
-												warning("Cannot compute polygon, returning 1 m^2 as the default range area for ", i)
+												warning("Cannot compute polygon, returning 1 as the default range area for ", i)
 											} #cls is(polygon_area == 0)
 											if(polygon_area != 0) {
 												v[n] <- polygon_area
@@ -243,13 +265,18 @@ range.metrics <- function(species_records, species="SPECIES", longitude="LONGITU
 										spp_i_range_polygon <- try(mcp(temp, id=rep(1, nrow(temp)), percent=outlier_pct))
 										if(class(spp_i_range_polygon)[1] == "try-error") {
 											v[n] <- 1
-											warning("Unable to compute a polygon, returning 1 m^2 as the range area for ", i)
+											warning("Unable to compute a polygon, returning 1 as the range area for ", i)
 										} #cls if(class(spp...
 										if(class(spp_i_range_polygon)[1] != "try-error") {
-											polygon_area <- try(areaPolygon(as.data.frame(spp_i_range_polygon[,2:3])))
+											if(coord.type=="longlat") {
+												polygon_area <- try(areaPolygon(as.data.frame(spp_i_range_polygon[,2:3])))
+											} #cls if(coord.type="longlat")
+											if(coord.type=="custom") {
+												polygon_area <- try(abs(polyarea(spp_i_range_polygon$X, spp_i_range_polygon$Y)))
+											} #cls if(coord.type="custom")
 											if(class(polygon_area) == "try-error") {
 												v[n] <- 1
-												warning("Cannot compute polygon area, returning 1 m^2 as the range area for ", i)
+												warning("Cannot compute polygon area, returning 1 as the range area for ", i)
 											} #cls if(class(polygon_area)...
 											if(class(polygon_area) == "numeric") {
 												v[n] <- polygon_area
