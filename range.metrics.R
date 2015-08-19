@@ -98,13 +98,18 @@ range.metrics <- function(species_records, species="SPECIES", longitude="LONGITU
 	coordinates(species_records) <- c("LONGITUDE", "LATITUDE")
 	
 	#####
-	if(plot.out == TRUE) {
-		require(maps)
-		lon.ext <- extent(species_records)[1:2]
-		lat.ext <- extent(species_records)[3:4]
-		map("world", fill=TRUE, col="gray50", bg="lightblue", ylim=c(-40,-15), xlim=c(120,150), mar=c(0,0,0,0))
-		#map("world", fill=TRUE, col="gray50", bg="lightblue", ylim=lat.ext, xlim=lon.ext, mar=c(0,0,0,0))
-		points(species_records, col=species_records$SPECIES, pch=16)
+		if(plot.out == TRUE) {
+		if(coord.type == "longlat") {
+		  require(maps)
+		  lon.ext <- extent(species_records)[1:2]
+		  lat.ext <- extent(species_records)[3:4]
+		  map("world", fill=TRUE, col="gray50", bg="lightblue", ylim=lat.ext, xlim=lon.ext, mar=c(0,0,0,0))
+		  #map("world", fill=TRUE, col="gray50", bg="lightblue", ylim=lat.ext, xlim=lon.ext, mar=c(0,0,0,0))
+		  points(species_records, col=species_records$SPECIES, pch=16)
+		} #cls if longlat
+	  if(coord.type == "custom") {
+	    plot(species_records, col=species_records$SPECIES, pch=16)
+	  } #cls if custom
 		} #cls if(plot.out)
 	######
 	
