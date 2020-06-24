@@ -1,0 +1,12 @@
+Package: biomapME
+Type: Package
+Title: Biodiversity Mapping and Macroecology
+Version: 1.0
+Date: 2015-08-14
+Author: Greg R. Guerin
+Maintainer: Greg Guerin <ggueri01@gmail.com>
+Depends: geosphere, simba, raster, adehabitat, SDMTools, ape, pracma, maps, vegan
+Suggests:
+Description: R functions for generating gridded biodiversity maps from point (incidence) data.
+License: GNU GPL-3
+LazyData: TRUE
