@@ -12,6 +12,7 @@ library(devtools)
 source_url("https://raw.githubusercontent.com/GregGuerin/biomap/master/phylogenetic.diversity.sites.R")
 ``` 
 
+
 Biomap can be cited as:
 ```
 Guerin, G.R. (2015) biomap: Biodiversity Mapping Package. R package v1.0. https://github.com/GregGuerin/biomap DOI 10.5281/zenodo.23116
