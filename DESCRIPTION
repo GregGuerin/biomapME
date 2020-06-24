@@ -5,7 +5,7 @@ Version: 2.0
 Date: 2020-06-24
 Author: Greg R. Guerin
 Maintainer: Greg Guerin <ggueri01@gmail.com>
-Depends: geosphere, simba, raster, adehabitat, SDMTools, ape, pracma, maps, vegan
+Depends: geosphere, simba, raster, SDMTools, ape, pracma, maps, vegan
 Suggests:
 Description: R functions for generating gridded biodiversity maps from point (incidence) data.
 License: GNU GPL-3
