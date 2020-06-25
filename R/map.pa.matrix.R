@@ -1,24 +1,14 @@
 map.pa.matrix <- function(species_records, records="single", site.coords, species="SPECIES", longitude="LONGITUDE", latitude="LATITUDE", frame.raster, deg.resolution=c(0.25,0.25), extent.vector)
 {
 
-# 	require(raster)
-# 	require(simba)
-
 	if(class(species_records) != "data.frame") {
 		stop("Species data must be in a data.frame")
 	} #cls if(class(species…
 
 	if(records == "site") {
-		convert <- function(an.occurrence.matrix, site.coords) {
-			dat <-  data.frame(SPECIES = "hold",LONGITUDE = 0,LATITUDE = 0)
-			nam <-  names(an.occurrence.matrix)
-			for(ii in 1:ncol(an.occurrence.matrix)){
-				w <-  an.occurrence.matrix[,ii]>0
-				dat <- rbind(dat, setNames(data.frame(rep(nam[ii],sum(w)),site.coords[w,]), names(dat)))
-			}
-			return(dat[-1,])
-		}
-		species_records <- convert(species_records, site.coords)
+		
+		species_records <- convert.site.data(species_records, site.coords)
+		
 	}
 
 	if(records == "single") {
@@ -37,6 +27,7 @@ map.pa.matrix <- function(species_records, records="single", site.coords, specie
 		species_records <- species_records[-which(is.na(species_records$LATITUDE)),]
 	}
 
+  
 	coordinates(species_records) <- c("LONGITUDE", "LATITUDE")
 
 
@@ -75,8 +66,6 @@ map.pa.matrix <- function(species_records, records="single", site.coords, specie
 				cell_occur_matrix_prep <- cell_occur_matrix_prep[-which(is.na(cell_occur_matrix_prep$cell)),]
 			} #cls if(any(is.na))
 			cell_occur_matrix <- mama(cell_occur_matrix_prep)
-
-
 
 
 		cat("Occurrence matrix generated with dimensions: ", dim(cell_occur_matrix), "\n")
