@@ -1,10 +1,4 @@
-buffer.frags <- function(XY, radius, vegetation.base.raster)
-#
-#Version --
-#
-#1.0
-#
-{
+buffer.frags <- function(XY, radius, vegetation.base.raster) {
 	if(class(XY) == "SpatialPointsDataFrame") {
 		LONG <- coordinates(XY)[,1]
 		LAT <- coordinates(XY)[,2]
