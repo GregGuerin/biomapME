@@ -2,7 +2,7 @@ range.metrics <- function(species_records, species="SPECIES", longitude="LONGITU
 
 # 	require(adehabitat)
 
-	if(outlier_pct > 99 | outlier_pct < 1) {
+	if(outlier_pct > 100 | outlier_pct < 1) {
 		stop("Outlier_pct should be a percentage")
 	} #cls outlier stop...
 
