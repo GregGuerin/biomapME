@@ -132,6 +132,7 @@ weighted.endemism <- function(species_records, records="single", site.coords, sp
 							temp$cells <- row.names(temp)
 							temp <- merge(temp, cell_centroids, by="cells")
 							temp <- data.frame(LONGITUDE=temp$LONGITUDE, LATITUDE=temp$LATITUDE)
+							coordinates(temp) <- c("LONGITUDE", "LATITUDE")
 
 							if(geo.calc == "max.dist") {
 								cell_dimensions <- (mean(values(area(frame.raster)))*1000000)^(0.5) #area in km^2 so converting to m^2 to match areaPolygon, then find square root to get back to 1-dimension
@@ -140,19 +141,19 @@ weighted.endemism <- function(species_records, records="single", site.coords, sp
 									warning("Only one record, returning the span of single grid cell for ", colnames(x[i]))
 									} else {
 										if(nrow(temp) < 5) {
-											v[i] <- max(CalcDists(temp))
+											v[i] <- max(CalcDists(as.data.frame(temp)))
 											if(v[i] < cell_dimensions) {
 												v[i] <- cell_dimensions
 												warning("Range is less than spatial grain of frame.raster, returning span of single grid cell for ", colnames(x[i]))
 											} #cls if(v[i] < cell_dimensions)...
 										} #cls if nrow(temp) < 5...
 										if(nrow(temp) > 4) {
-											spp_i_range_polygon <- try(mcp(temp, id=rep(1, nrow(temp)), percent=outlier_pct))
+											spp_i_range_polygon <- try(mcp(temp, percent=outlier_pct))
 											if(class(spp_i_range_polygon)[1] == "try-error") {
 												v[i] <- max(CalcDists(temp))
 											} #cls if(class(spp...
 											if(!class(spp_i_range_polygon)[1] == "try-error") {
-												v[i] <- max(CalcDists(as.data.frame(spp_i_range_polygon[,2:3])))
+												v[i] <- max(CalcDists(as.data.frame(spp_i_range_polygon@polygons[[1]]@Polygons[[1]]@coords)))
 											}	 #cls if(!class(spp...
 											if(v[i] < cell_dimensions) {
 												v[i] <- cell_dimensions
@@ -165,7 +166,7 @@ weighted.endemism <- function(species_records, records="single", site.coords, sp
 							if(geo.calc == "polygon") {
 								cell_size <- mean(values(area(frame.raster)))*1000000 #area in km^2 so convert to m^2 to match areaPolygon
 								if(nrow(temp) < 5) {
-									polygon_area <- try(areaPolygon(temp))
+									polygon_area <- try(areaPolygon(as.data.frame(temp)))
 									if(class(polygon_area) == "try-error") {
 										v[i] <- cell_size
 										warning("Less than minimum number of required points to compute polygon, returning approximate area of single grid cell for ", colnames(x[i]))
@@ -181,14 +182,14 @@ weighted.endemism <- function(species_records, records="single", site.coords, sp
 									} #cls if(class(polygon...
 								} #cls if(nrow(temp) < 5)...
 								if(nrow(temp) > 4) {
-									spp_i_range_polygon <- try(mcp(temp, id=rep(1, nrow(temp)), percent=outlier_pct))
+									spp_i_range_polygon <- try(mcp(temp, percent=outlier_pct))
 									if(class(spp_i_range_polygon)[1] == "try-error") {
 										v[i] <- cell_size
 										warning("Unable to compute polygon, returning approximate area of single grid cell for ", colnames(x[i]))
 									} #cls if(class(spp...
 									if(class(spp_i_range_polygon)[1] != "try-error") {
 										plot(spp_i_range_polygon, main=paste(polygon_area))
-										polygon_area <- try(areaPolygon(as.data.frame(spp_i_range_polygon[,2:3])))
+										polygon_area <- try(areaPolygon(as.data.frame(spp_i_range_polygon@polygons[[1]]@Polygons[[1]]@coords)))
 										if(class(polygon_area) != "numeric") {
 											v[i] <- cell_size
 											warning("Cannot compute polygon area, returning approximate area of single grid cell for ", colnames(x[i]))
@@ -231,6 +232,7 @@ weighted.endemism <- function(species_records, records="single", site.coords, sp
 						temp <- x[which(x$SPECIES == i),]
 						colnames(temp) <- colnames(x) #?necessary
 						temp <- data.frame(LONGITUDE=temp$LONGITUDE, LATITUDE=temp$LATITUDE)
+						coordinates(temp) <- c("LONGITUDE", "LATITUDE")
 
 								if(geo.calc == "max.dist") {
 									cell_dimensions <- (mean(values(area(frame.raster)))*1000000)^(0.5) #area in km^2 so convert to m^2 to match areaPolygon, then find square root to get back to 1-dimension
@@ -239,19 +241,19 @@ weighted.endemism <- function(species_records, records="single", site.coords, sp
 										warning("Only one record, returning the size of a single grid cell (1-dimension) for ", i)
 									} else {
 											if(nrow(temp) < 5) {
-												v[n] <- max(CalcDists(temp))
+												v[n] <- max(CalcDists(as.data.frame(temp)))
 												if(v[n] < cell_dimensions) {
 													v[n] <- cell_dimensions
 													warning("Range span less than spatial grain of frame.raster, returning span of single grid cell for ", i)
 												} #cls if(v[n] < cell_dimensions...
 											} #cls if(nrow(temp) < 5)...
 											if(nrow(temp) > 4) {
-												spp_i_range_polygon <- try(mcp(temp, id=rep(1, nrow(temp)), percent=outlier_pct))
+												spp_i_range_polygon <- try(mcp(temp, percent=outlier_pct))
 												if(class(spp_i_range_polygon)[1] == "try-error") {
-													v[n] <- max(CalcDists(temp))
+													v[n] <- max(CalcDists(as.data.frame(temp)))
 												} #cls if(class...
 												if(!class(spp_i_range_polygon)[1] == "try-error") {
-													v[n] <- max(CalcDists(as.data.frame(spp_i_range_polygon[,2:3])))
+													v[n] <- max(CalcDists(as.data.frame(spp_i_range_polygon@polygons[[1]]@Polygons[[1]]@coords)))
 												} #cls if(!(class...
 												if(v[n] < cell_dimensions) {
 													v[n] <- cell_dimensions
@@ -264,7 +266,7 @@ weighted.endemism <- function(species_records, records="single", site.coords, sp
 								if(geo.calc == "polygon") {
 									cell_size <- mean(values(area(frame.raster)))*1000000 #returns size in m^2 (convert from km^2)
 									if(nrow(temp) < 5) {
-										polygon_area <- try(areaPolygon(temp))
+										polygon_area <- try(areaPolygon(as.data.frame(temp)))
 										if(class(polygon_area) == "try-error") {
 											v[n] <- cell_size
 											warning("Cannot compute polygon, returning approximate area of single grid cell for ", i)
@@ -280,14 +282,14 @@ weighted.endemism <- function(species_records, records="single", site.coords, sp
 										} #cls if(class(polyon_area) == "numeric...
 									} #cls if(nrow(temp) < 5)...
 									if(nrow(temp) > 4) {
-										spp_i_range_polygon <- try(mcp(temp, id=rep(1, nrow(temp)), percent=outlier_pct))
+										spp_i_range_polygon <- try(mcp(temp, percent=outlier_pct))
 										if(class(spp_i_range_polygon)[1] == "try-error") {
 											v[n] <- cell_size
 											warning("Unable to compute a polygon, returning approximate area of single grid cell for ", i)
 										} #cls if(class(spp...
 										if(class(spp_i_range_polygon)[1] != "try-error") {
 											plot(spp_i_range_polygon, main=paste(polygon_area))
-											polygon_area <- try(areaPolygon(as.data.frame(spp_i_range_polygon[,2:3])))
+											polygon_area <- try(areaPolygon(as.data.frame(spp_i_range_polygon@polygons[[1]]@Polygons[[1]]@coords)))
 											if(class(polygon_area) == "try-error") {
 												v[n] <- cell_size
 												warning("Cannot compute polygon area, returning approximate area of single grid cell for ", i)
