@@ -1,12 +1,6 @@
-weighted.endemism <- function(species_records, records="single", site.coords, species="SPECIES", longitude="LONGITUDE", latitude="LATITUDE", frame.raster, deg.resolution=c(0.25,0.25), extent.vector, type="weighted", plot.raster=TRUE, own.weights, weight.type="cell", geo.type="cell", geo.calc="max.dist", outlier_pct=95, verbose=TRUE, own.grid.matrix)
-{
+weighted.endemism <- function(species_records, records="single", site.coords, species="SPECIES", longitude="LONGITUDE", latitude="LATITUDE", frame.raster, deg.resolution=c(0.25,0.25), extent.vector, type="weighted", plot.raster=TRUE, own.weights, weight.type="cell", geo.type="cell", geo.calc="max.dist", outlier_pct=100, verbose=TRUE, own.grid.matrix) {
 
-# 	require(raster)
-# 	require(simba)
-# 	require(adehabitat)
-# 	require(geosphere)
-
-	if(outlier_pct > 99 | outlier_pct < 1) {
+	if(outlier_pct > 100 | outlier_pct < 1) {
 		stop("Outlier_pct should be a percentage")
 	}
 
@@ -15,16 +9,7 @@ weighted.endemism <- function(species_records, records="single", site.coords, sp
 	}
 
 	if(records == "site") {
-		convert <- function(an.occurrence.matrix, site.coords) {
-			dat <-  data.frame(SPECIES = "hold",LONGITUDE = 0,LATITUDE = 0)
-			nam <-  names(an.occurrence.matrix)
-			for(ii in 1:ncol(an.occurrence.matrix)){
-				w <-  an.occurrence.matrix[,ii]>0
-				dat <-  rbind(dat, setNames(data.frame(rep(nam[ii],sum(w)),site.coords[w,]), names(dat)))
-			}
-			return(dat[-1,])
-		}
-		species_records <- convert(species_records, site.coords)
+		species_records <- convert.site.data(species_records, site.coords)
 	}
 
 	if(records == "single") {
@@ -76,18 +61,7 @@ weighted.endemism <- function(species_records, records="single", site.coords, sp
 	} #clse if(!(missing(own.grid...
 
 	if(missing(own.grid.matrix)) {
-		cat("Generating the gridded occurrence matrix", "\n")
-		cell_numbers <- cellFromXY(frame.raster, species_records)
-		cell_occur_matrix_prep <- data.frame(cell=cell_numbers, species=species_records$SPECIES, presence=rep(1, length(cell_numbers)))
-		cell_occur_matrix_prep$species <- factor(cell_occur_matrix_prep$species)
-		if(any(duplicated(cell_occur_matrix_prep))) {
-			cell_occur_matrix_prep <- cell_occur_matrix_prep[-which(duplicated(cell_occur_matrix_prep)),]
-		}
-		if(any(is.na(cell_occur_matrix_prep$cell))) {
-			cell_occur_matrix_prep <- cell_occur_matrix_prep[-which(is.na(cell_occur_matrix_prep$cell)),]
-		}
-		cell_occur_matrix <- mama(cell_occur_matrix_prep)
-		cat("Occurrence matrix generated with dimensions: ", dim(cell_occur_matrix), "\n")
+	  cell_occur_matrix <- map.pa.matrix(as.data.frame(species_records), frame.raster=frame.raster)$grid.matrix
 	} #cls if(missing(own.grid...
 
 
@@ -95,8 +69,12 @@ weighted.endemism <- function(species_records, records="single", site.coords, sp
 
 	if(!(missing("own.weights"))) {
 		if(class(own.weights) != "numeric") {stop("Supplied species weights must be numeric")}
-		if(!(all(names(own.weights) %in% colnames(cell_occur_matrix)) & all(colnames(cell_occur_matrix) %in% names(own.weights)))) {stop("Species names for supplied weights are not a complete match for species in supplied records")} #true if all in it both ways
-		if(length(own.weights) != length(colnames(cell_occur_matrix))) {stop("Supplied weights vector is different length than number of species - must supply a weighting for each species")}
+		if(!(all(names(own.weights) %in% colnames(cell_occur_matrix)) & all(colnames(cell_occur_matrix) %in% names(own.weights)))) {
+		  stop("Species names for supplied weights are not a complete match for species in supplied records")
+		  } #true if all in it both ways
+		if(length(own.weights) != length(colnames(cell_occur_matrix))) {
+		  stop("Supplied weights vector is different length than number of species - must supply a weighting for each species")
+		  }
 
 		cat("Calculating user supplied weights", "\n")
 		inv_rang_cell_occur_mat <- cell_occur_matrix
@@ -112,7 +90,7 @@ weighted.endemism <- function(species_records, records="single", site.coords, sp
 		if(weight.type=="cell") {
 			cat("Calculating cell-based range weights", "\n")
 			inv_rang_cell_occur_mat <- apply(cell_occur_matrix, 2, function(x) {x/sum(x)})
-			ranges <- apply(cell_occur_matrix, 2, function(x) {sum(x)}) #can we just do colSums?
+			ranges <- colSums(cell_occur_matrix)
 		} #cls if(weight.type = cell...
 
 		if(weight.type=="richness") {
@@ -122,6 +100,7 @@ weighted.endemism <- function(species_records, records="single", site.coords, sp
 
 		if(weight.type=="geo") {
 
+		  #####################################
 			CalcDists <- function(longlats) { #modified from CalcDists.R, see https://gist.githubusercontent.com/sckott/931445/raw/9db1d432b2308a8861f6425f38aaabbce44eb994/CalcDists.R
 				name <- list(rownames(longlats), rownames(longlats))
 				n <- nrow(longlats)
@@ -132,7 +111,7 @@ weighted.endemism <- function(species_records, records="single", site.coords, sp
 				z <- as.dist(z)
 				return(z)
 				} #cls CalcDists
-
+      #####################################
 
 			if(geo.type == "cell") {
 
