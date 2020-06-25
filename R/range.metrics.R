@@ -1,12 +1,6 @@
-range.metrics <- function(species_records, species="SPECIES", longitude="LONGITUDE", latitude="LATITUDE", coord.type="longlat", weight.type="cell", geo.calc="max.dist", outlier_pct=95, verbose=TRUE, frame.raster, deg.resolution=c(0.25,0.25), extent.vector, plot.out=TRUE)
-#Version --
-#1.1
-{
+range.metrics <- function(species_records, species="SPECIES", longitude="LONGITUDE", latitude="LATITUDE", coord.type="longlat", weight.type="cell", geo.calc="max.dist", outlier_pct=95, verbose=TRUE, frame.raster, deg.resolution=c(0.25,0.25), extent.vector, plot.out=TRUE) {
 
-# 	require(raster)
 # 	require(adehabitat)
-# 	require(geosphere)
-# 	require(pracma)
 
 	if(outlier_pct > 99 | outlier_pct < 1) {
 		stop("Outlier_pct should be a percentage")
@@ -38,7 +32,6 @@ range.metrics <- function(species_records, species="SPECIES", longitude="LONGITU
 	#####
 	if(plot.out == TRUE) {
 		if(coord.type == "longlat") {
-		  require(maps)
 		  lon.ext <- extent(species_records)[1:2]
 		  lat.ext <- extent(species_records)[3:4]
 		  map("world", fill=TRUE, col="gray50", bg="lightblue", ylim=lat.ext, xlim=lon.ext, mar=c(0,0,0,0))
@@ -158,7 +151,6 @@ range.metrics <- function(species_records, species="SPECIES", longitude="LONGITU
 						n <- n + 1
 						temp <- x[which(x$SPECIES == i),]
 						colnames(temp) <- colnames(x) #?necessary
-						temp <- data.frame(LONGITUDE=temp$LONGITUDE, LATITUDE=temp$LATITUDE)
 
 								if(geo.calc == "max.dist") {
 									if(nrow(temp) < 2) {
@@ -166,15 +158,17 @@ range.metrics <- function(species_records, species="SPECIES", longitude="LONGITU
 										warning("Only one record, returning a default range size of 1 for ", i)
 									} else {
 											if(nrow(temp) < 5) {
-												v[n] <- max(CalcDists(temp))
+											  temp2 <- data.frame(LONGITUDE=temp$LONGITUDE, LATITUDE=temp$LATITUDE)
+											  v[n] <- max(CalcDists(temp2))
 											} #cls if(nrow(temp) < 5)...
 											if(nrow(temp) > 4) {
-												spp_i_range_polygon <- try(mcp(temp, id=rep(1, nrow(temp)), percent=outlier_pct))
+												spp_i_range_polygon <- try(mcp(temp, percent=outlier_pct))
 												if(class(spp_i_range_polygon)[1] == "try-error") {
-													v[n] <- max(CalcDists(temp))
+												  temp2 <- data.frame(LONGITUDE=temp$LONGITUDE, LATITUDE=temp$LATITUDE)
+												  v[n] <- max(CalcDists(temp2))
 												} #cls if(class...
 												if(!class(spp_i_range_polygon)[1] == "try-error") {
-													v[n] <- max(CalcDists(as.data.frame(spp_i_range_polygon[,2:3])))
+													v[n] <- max(CalcDists(as.data.frame(spp_i_range_polygon@polygons[[1]]@Polygons[[1]]@coords)))
 												} #cls if(!(class...
 											} #cls if(nrow(temp) > 4)...
 										} #cls else...
@@ -204,17 +198,17 @@ range.metrics <- function(species_records, species="SPECIES", longitude="LONGITU
 										} #cls if(class(polyon_area) == "numeric...
 									} #cls if(nrow(temp) < 5)...
 									if(nrow(temp) > 4) {
-										spp_i_range_polygon <- try(mcp(temp, id=rep(1, nrow(temp)), percent=outlier_pct))
+										spp_i_range_polygon <- try(mcp(temp, percent=outlier_pct))
 										if(class(spp_i_range_polygon)[1] == "try-error") {
 											v[n] <- 1
 											warning("Unable to compute a polygon, returning 1 as the range area for ", i)
 										} #cls if(class(spp...
 										if(class(spp_i_range_polygon)[1] != "try-error") {
 											if(coord.type=="longlat") {
-												polygon_area <- try(areaPolygon(as.data.frame(spp_i_range_polygon[,2:3])))
+												polygon_area <- try(areaPolygon(as.data.frame(spp_i_range_polygon@polygons[[1]]@Polygons[[1]]@coords)))
 											} #cls if(coord.type="longlat")
 											if(coord.type=="custom") {
-												polygon_area <- try(abs(polyarea(spp_i_range_polygon$X, spp_i_range_polygon$Y)))
+												polygon_area <- try(abs(polyarea(spp_i_range_polygon@polygons[[1]]@Polygons[[1]]@coords[,"LONGITUDE"], spp_i_range_polygon@polygons[[1]]@Polygons[[1]]@coords[,"LATITUDE"])))
 											} #cls if(coord.type="custom")
 											if(class(polygon_area) == "try-error") {
 												v[n] <- 1
