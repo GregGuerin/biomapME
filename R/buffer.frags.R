@@ -23,8 +23,6 @@ buffer.frags <- function(XY, radius, vegetation.base.raster) {
 		stop("'vegetation.base.raster' should be a RasterLayer representing vegetation or habitat presence.")
 	}
 
-# 	require(raster)
-# 	require(SDMTools)
 
 	n <- 0
 	dat <- list()
