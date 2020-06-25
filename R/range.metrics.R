@@ -73,6 +73,38 @@ range.metrics <- function(species_records, species="SPECIES", longitude="LONGITU
 	frame.raster[] <- NA
 
 
+	########################################
+	cell.ranges <- function(x) { #where x is species_records (a SPDF object)
+	  n <- 0
+	  v <- rep(0, length(unique(x$SPECIES)))
+	  for (i in unique(x$SPECIES)) {
+	    n <- n + 1
+	    temp <- x[which(x$SPECIES == i),]
+	    occupied.cells <- cellFromXY(frame.raster, temp)
+	    frame.raster[occupied.cells] <- 1
+	    numberOFcells <- sum(frame.raster[!is.na(frame.raster[])])
+	    v[n] <- numberOFcells
+	    if(plot.out == TRUE) {
+	      dev.new()
+	      plot(frame.raster, main=i, breaks=c(0.5,1.5), col=topo.colors(length(unique(species_records$SPECIES)))[n])
+	    } #cls if(plot.out)
+	    names(frame.raster) <-  i
+	    if(n == 1) {
+	      maps <- stack(frame.raster)
+	    }#cls if(n ==1)
+	    if(n > 1) {
+	      maps <- stack(maps, frame.raster)
+	    } #cls if(n >1)
+	    frame.raster[] <- NA #reset
+	  } #cls each species loop
+	  names(v) <- unique(x$SPECIES)
+	  names(maps) <- unique(x$SPECIES)
+	  outputs <- list(ranges=v, rasters=maps)
+	  return(outputs)
+	} #cls cell.ranges function
+	#######################
+	
+	
 	ranges <- cell.ranges(species_records)
 
 
@@ -82,9 +114,134 @@ range.metrics <- function(species_records, species="SPECIES", longitude="LONGITU
 
 
 		if(weight.type=="geo") {
+		  
+		  
+		  ########################################
+		  CalcDists <- function(longlats) { #modified from CalcDists.R, see https://gist.githubusercontent.com/sckott/931445/raw/9db1d432b2308a8861f6425f38aaabbce44eb994/CalcDists.R
+		    name <- list(rownames(longlats), rownames(longlats))
+		    n <- nrow(longlats)
+		    z <- matrix(0, n, n, dimnames = name)
+		    for (i in 1:n) {
+		      for (j in 1:n) {
+		        if(coord.type=="longlat") {
+		          z[i, j] <- distCosine(c(longlats[j, 1], longlats[j, 2]), c(longlats[i, 1], longlats[i, 2]))
+		        } #cls if(missing(XY))
+		        if(coord.type=="custom") {
+		          z[i, j] <- sqrt(sum((c(longlats[j, 1], longlats[j, 2]) - c(longlats[i, 1], longlats[i, 2])) ^ 2))
+		        } #cls if(!(missing(XY)))
+		      } #cls for (j)
+		    } #cls for (i)
+		    z <- as.dist(z)
+		    return(z)
+		  } #cls CalcDists
+		  ######################################
+		  
+		  
+		  
+		  
+		  ###########################################
+		  spp_ranges <- function(x) {
+		    n <- 0
+		    v <- rep(0, length(unique(x$SPECIES)))
+		    x$SPECIES <- sub(pattern = " ", replacement = ".", x = x$SPECIES, fixed=TRUE)
+		    x$SPECIES <- sub(pattern = "-", replacement = ".", x = x$SPECIES, fixed=TRUE)
+		    for (i in unique(x$SPECIES)) {
+		      n <- n + 1
+		      temp <- x[which(x$SPECIES == i),]
+		      colnames(temp) <- colnames(x) #?necessary
+		      
+		      if(geo.calc == "max.dist") {
+		        if(nrow(temp) < 2) {
+		          v[n] <- 1
+		          warning("Only one record, returning a default range size of 1 for ", i)
+		        } else {
+		          if(nrow(temp) < 5) {
+		            temp2 <- data.frame(LONGITUDE=temp$LONGITUDE, LATITUDE=temp$LATITUDE)
+		            v[n] <- max(CalcDists(temp2))
+		          } #cls if(nrow(temp) < 5)...
+		          if(nrow(temp) > 4) {
+		            spp_i_range_polygon <- try(mcp(temp, percent=outlier_pct))
+		            if(class(spp_i_range_polygon)[1] == "try-error") {
+		              temp2 <- data.frame(LONGITUDE=temp$LONGITUDE, LATITUDE=temp$LATITUDE)
+		              v[n] <- max(CalcDists(temp2))
+		            } #cls if(class...
+		            if(!class(spp_i_range_polygon)[1] == "try-error") {
+		              v[n] <- max(CalcDists(as.data.frame(spp_i_range_polygon@polygons[[1]]@Polygons[[1]]@coords)))
+		            } #cls if(!(class...
+		          } #cls if(nrow(temp) > 4)...
+		        } #cls else...
+		      } #cls if(geo.calc == "max.dist")...
+		      
+		      if(geo.calc == "polygon") {
+		        if(nrow(temp) < 5) {
+		          if(coord.type=="longlat") {
+		            polygon_area <- try(areaPolygon(temp))
+		          } #cls if(coord.type="longlat")
+		          if(coord.type=="custom") {
+		            polygon_area <- try(abs(polyarea(temp[,"LONGITUDE"], temp[,"LATITUDE"])))
+		          } #cls if(coord.type="custom")
+		          if(class(polygon_area) == "try-error") {
+		            v[n] <- 1
+		            warning("Cannot compute polygon, returning 1 as the default range area for ", i)
+		          } #cls if(class(polygon_area)...
+		          if(class(polygon_area) == "numeric") {
+		            if(polygon_area == 0) {
+		              v[n] <- 1
+		              warning("Cannot compute polygon, returning 1 as the default range area for ", i)
+		            } #cls is(polygon_area == 0)
+		            if(polygon_area != 0) {
+		              v[n] <- polygon_area
+		            } #cls if(polygon_area != 0)
+		            
+		          } #cls if(class(polyon_area) == "numeric...
+		        } #cls if(nrow(temp) < 5)...
+		        if(nrow(temp) > 4) {
+		          spp_i_range_polygon <- try(mcp(temp, percent=outlier_pct))
+		          if(class(spp_i_range_polygon)[1] == "try-error") {
+		            v[n] <- 1
+		            warning("Unable to compute a polygon, returning 1 as the range area for ", i)
+		          } #cls if(class(spp...
+		          if(class(spp_i_range_polygon)[1] != "try-error") {
+		            if(coord.type=="longlat") {
+		              polygon_area <- try(areaPolygon(as.data.frame(spp_i_range_polygon@polygons[[1]]@Polygons[[1]]@coords)))
+		            } #cls if(coord.type="longlat")
+		            if(coord.type=="custom") {
+		              polygon_area <- try(abs(polyarea(spp_i_range_polygon@polygons[[1]]@Polygons[[1]]@coords[,"LONGITUDE"], spp_i_range_polygon@polygons[[1]]@Polygons[[1]]@coords[,"LATITUDE"])))
+		            } #cls if(coord.type="custom")
+		            if(class(polygon_area) == "try-error") {
+		              v[n] <- 1
+		              warning("Cannot compute polygon area, returning 1 as the range area for ", i)
+		            } #cls if(class(polygon_area)...
+		            if(class(polygon_area) == "numeric") {
+		              v[n] <- polygon_area
+		              if(plot.out == TRUE) {
+		                plot(spp_i_range_polygon, main=paste(polygon_area))
+		              } #cls if plot.out...
+		            } #cls if(class(poygon_area == numeric...
+		          } #cls if(!class(spp...
+		        } #cls if(nrow(temp) > 4)...
+		      } #cls if geo.calc = polygon
+		      
+		      
+		      if(geo.calc == "LONG") {
+		        v[n] <- max(temp$LONGITUDE)-min(temp$LONGITUDE)
+		      } #cls if(geo.calc =="LONG")...
+		      
+		      if(geo.calc == "LAT") {
+		        v[n] <- max(temp$LATITUDE)-min(temp$LATITUDE)
+		      } #cls if(geo.calc =="LONG")...
+		      
+		      
+		      if(verbose) cat(n, "species complete:", i, v[n], "\n")
+		      
+		    } #cls for (i in colnames...
+		    
+		    names(v) <- unique(x$SPECIES)
+		    return(v)
+		  } #cls spp_ranges function
+		  ############################
 
 
-			
 				ranges <- spp_ranges(species_records)
 
 
@@ -106,173 +263,3 @@ range.metrics <- function(species_records, species="SPECIES", longitude="LONGITU
 
 } #cls function
 
-
-
-
-##############################
-
-
-
-
-CalcDists <- function(longlats) { #modified from CalcDists.R, see https://gist.githubusercontent.com/sckott/931445/raw/9db1d432b2308a8861f6425f38aaabbce44eb994/CalcDists.R
-  name <- list(rownames(longlats), rownames(longlats))
-  n <- nrow(longlats)
-  z <- matrix(0, n, n, dimnames = name)
-  for (i in 1:n) {
-    for (j in 1:n) {
-      if(coord.type=="longlat") {
-        z[i, j] <- distCosine(c(longlats[j, 1], longlats[j, 2]), c(longlats[i, 1], longlats[i, 2]))
-      } #cls if(missing(XY))
-      if(coord.type=="custom") {
-        z[i, j] <- sqrt(sum((c(longlats[j, 1], longlats[j, 2]) - c(longlats[i, 1], longlats[i, 2])) ^ 2))
-      } #cls if(!(missing(XY)))
-    } #cls for (j)
-  } #cls for (i)
-  z <- as.dist(z)
-  return(z)
-} #cls CalcDists
-
-
-
-
-########################################
-
-
-
-cell.ranges <- function(x) { #where x is species_records (a SPDF object)
-  n <- 0
-  v <- rep(0, length(unique(x$SPECIES)))
-  for (i in unique(x$SPECIES)) {
-    n <- n + 1
-    temp <- x[which(x$SPECIES == i),]
-    occupied.cells <- cellFromXY(frame.raster, temp)
-    frame.raster[occupied.cells] <- 1
-    numberOFcells <- sum(frame.raster[!is.na(frame.raster[])])
-    v[n] <- numberOFcells
-    if(plot.out == TRUE) {
-      dev.new()
-      plot(frame.raster, main=i, breaks=c(0.5,1.5), col=topo.colors(length(unique(species_records$SPECIES)))[n])
-    } #cls if(plot.out)
-    names(frame.raster) <-  i
-    if(n == 1) {
-      maps <- stack(frame.raster)
-    }#cls if(n ==1)
-    if(n > 1) {
-      maps <- stack(maps, frame.raster)
-    } #cls if(n >1)
-    frame.raster[] <- NA #reset
-  } #cls each species loop
-  names(v) <- unique(x$SPECIES)
-  names(maps) <- unique(x$SPECIES)
-  outputs <- list(ranges=v, rasters=maps)
-  return(outputs)
-} #cls cell.ranges function
-
-
-
-#######################
-
-
-spp_ranges <- function(x) {
-  n <- 0
-  v <- rep(0, length(unique(x$SPECIES)))
-  x$SPECIES <- sub(pattern = " ", replacement = ".", x = x$SPECIES, fixed=TRUE)
-  x$SPECIES <- sub(pattern = "-", replacement = ".", x = x$SPECIES, fixed=TRUE)
-  for (i in unique(x$SPECIES)) {
-    n <- n + 1
-    temp <- x[which(x$SPECIES == i),]
-    colnames(temp) <- colnames(x) #?necessary
-    
-    if(geo.calc == "max.dist") {
-      if(nrow(temp) < 2) {
-        v[n] <- 1
-        warning("Only one record, returning a default range size of 1 for ", i)
-      } else {
-        if(nrow(temp) < 5) {
-          temp2 <- data.frame(LONGITUDE=temp$LONGITUDE, LATITUDE=temp$LATITUDE)
-          v[n] <- max(CalcDists(temp2))
-        } #cls if(nrow(temp) < 5)...
-        if(nrow(temp) > 4) {
-          spp_i_range_polygon <- try(mcp(temp, percent=outlier_pct))
-          if(class(spp_i_range_polygon)[1] == "try-error") {
-            temp2 <- data.frame(LONGITUDE=temp$LONGITUDE, LATITUDE=temp$LATITUDE)
-            v[n] <- max(CalcDists(temp2))
-          } #cls if(class...
-          if(!class(spp_i_range_polygon)[1] == "try-error") {
-            v[n] <- max(CalcDists(as.data.frame(spp_i_range_polygon@polygons[[1]]@Polygons[[1]]@coords)))
-          } #cls if(!(class...
-        } #cls if(nrow(temp) > 4)...
-      } #cls else...
-    } #cls if(geo.calc == "max.dist")...
-    
-    if(geo.calc == "polygon") {
-      if(nrow(temp) < 5) {
-        if(coord.type=="longlat") {
-          polygon_area <- try(areaPolygon(temp))
-        } #cls if(coord.type="longlat")
-        if(coord.type=="custom") {
-          polygon_area <- try(abs(polyarea(temp[,"LONGITUDE"], temp[,"LATITUDE"])))
-        } #cls if(coord.type="custom")
-        if(class(polygon_area) == "try-error") {
-          v[n] <- 1
-          warning("Cannot compute polygon, returning 1 as the default range area for ", i)
-        } #cls if(class(polygon_area)...
-        if(class(polygon_area) == "numeric") {
-          if(polygon_area == 0) {
-            v[n] <- 1
-            warning("Cannot compute polygon, returning 1 as the default range area for ", i)
-          } #cls is(polygon_area == 0)
-          if(polygon_area != 0) {
-            v[n] <- polygon_area
-          } #cls if(polygon_area != 0)
-          
-        } #cls if(class(polyon_area) == "numeric...
-      } #cls if(nrow(temp) < 5)...
-      if(nrow(temp) > 4) {
-        spp_i_range_polygon <- try(mcp(temp, percent=outlier_pct))
-        if(class(spp_i_range_polygon)[1] == "try-error") {
-          v[n] <- 1
-          warning("Unable to compute a polygon, returning 1 as the range area for ", i)
-        } #cls if(class(spp...
-        if(class(spp_i_range_polygon)[1] != "try-error") {
-          if(coord.type=="longlat") {
-            polygon_area <- try(areaPolygon(as.data.frame(spp_i_range_polygon@polygons[[1]]@Polygons[[1]]@coords)))
-          } #cls if(coord.type="longlat")
-          if(coord.type=="custom") {
-            polygon_area <- try(abs(polyarea(spp_i_range_polygon@polygons[[1]]@Polygons[[1]]@coords[,"LONGITUDE"], spp_i_range_polygon@polygons[[1]]@Polygons[[1]]@coords[,"LATITUDE"])))
-          } #cls if(coord.type="custom")
-          if(class(polygon_area) == "try-error") {
-            v[n] <- 1
-            warning("Cannot compute polygon area, returning 1 as the range area for ", i)
-          } #cls if(class(polygon_area)...
-          if(class(polygon_area) == "numeric") {
-            v[n] <- polygon_area
-            if(plot.out == TRUE) {
-              plot(spp_i_range_polygon, main=paste(polygon_area))
-            } #cls if plot.out...
-          } #cls if(class(poygon_area == numeric...
-        } #cls if(!class(spp...
-      } #cls if(nrow(temp) > 4)...
-    } #cls if geo.calc = polygon
-    
-    
-    if(geo.calc == "LONG") {
-      v[n] <- max(temp$LONGITUDE)-min(temp$LONGITUDE)
-    } #cls if(geo.calc =="LONG")...
-    
-    if(geo.calc == "LAT") {
-      v[n] <- max(temp$LATITUDE)-min(temp$LATITUDE)
-    } #cls if(geo.calc =="LONG")...
-    
-    
-    if(verbose) cat(n, "species complete:", i, v[n], "\n")
-    
-  } #cls for (i in colnames...
-  
-  names(v) <- unique(x$SPECIES)
-  return(v)
-} #cls spp_ranges function
-
-
-
-############################
