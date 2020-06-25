@@ -1,6 +1,4 @@
-range.metrics <- function(species_records, species="SPECIES", longitude="LONGITUDE", latitude="LATITUDE", coord.type="longlat", weight.type="cell", geo.calc="max.dist", outlier_pct=95, verbose=TRUE, frame.raster, deg.resolution=c(0.25,0.25), extent.vector, plot.out=TRUE) {
-
-# 	require(adehabitat)
+range.metrics <- function(species_records, species="SPECIES", longitude="LONGITUDE", latitude="LATITUDE", coord.type="longlat", weight.type="cell", geo.calc="max.dist", outlier_pct=100, verbose=TRUE, frame.raster, deg.resolution=c(0.25,0.25), extent.vector, plot.out=TRUE) {
 
 	if(outlier_pct > 100 | outlier_pct < 1) {
 		stop("Outlier_pct should be a percentage")
@@ -10,7 +8,13 @@ range.metrics <- function(species_records, species="SPECIES", longitude="LONGITU
 		stop("Species data must be in a data.frame")
 	} #cls species_records class check
 
-
+  if(!(weight.type %in% c("cell", "geo"))) {
+    stop("Weight type must be either 'cell' or 'geo'")
+  } #cls if weight type
+  
+  if(!(geo.calc %in% c("max.dist", "polygon", "LONG", "LAT"))) {
+    stop("Geo calc must be one of 'max.dist', 'polygon', 'LONG', 'LAT'")
+  } #cls if geo.type
 
 
 		species_records <- species_records[,c(species, longitude, latitude)]
