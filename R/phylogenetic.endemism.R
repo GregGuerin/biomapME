@@ -1,13 +1,8 @@
 phylogenetic.endemism <- function(species_records, records="single", site.coords, species="SPECIES", longitude="LONGITUDE", latitude="LATITUDE", sep.comm.spp = " ", phylo.tree, sep.phylo.spp = "_", frame.raster, deg.resolution=c(0.25,0.25), extent.vector, pe.type="weighted", plot.raster=TRUE, weight.type="cell", outlier_pct=95, own.weights, own.grid.matrix, own.phylo.cell.matrix, own.phyloMatrix)
 {
 
-# 	require(raster)
-# 	require(simba)
-# 	require(adehabitat)
-# 	require(geosphere)
-# 	require(ape)
 
-	if(outlier_pct > 99 | outlier_pct < 1) {
+	if(outlier_pct > 100 | outlier_pct < 1) {
 		stop("Outlier_pct should be a percentage")
 	}
 
