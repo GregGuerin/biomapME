@@ -1,7 +1,6 @@
 phylogenetic.diversity.sites <- function(species_records, phylo.tree)
 {
 
-	# require(ape)
 
 	if(class(species_records) != "data.frame") {
 		stop("Species data must be in a data.frame")
