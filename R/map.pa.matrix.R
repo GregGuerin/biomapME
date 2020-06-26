@@ -75,7 +75,7 @@ map.pa.matrix <- function(species_records, records="single", site.coords, specie
 		pa.raster[] <-  NA
 
 
-		cat("Collating outputs", "\n")
+		cat("Collating occurrence matrix outputs", "\n")
 		output <- list()
 		output$pa.raster <- pa.raster
 		output$grid.matrix <- cell_occur_matrix
