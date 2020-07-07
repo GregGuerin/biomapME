@@ -65,7 +65,7 @@ Georeferenced distance and area range metrics can be calculated longlats (defaul
 %%  \item{comp2 }{Description of 'comp2'}
 %% ...
 }
-\references{Guerin, G.R., Ruokolainen, L. & Lowe, A.J. (2015) A georeferenced implementation of weighted endemism. Methods in Ecology and Evolution. DOI: 10.1111/2041-210X.12361
+\references{Guerin, G.R., Ruokolainen, L. & Lowe, A.J. (2015) A georeferenced implementation of weighted endemism. Methods in Ecology and Evolution 6, 845–852.  DOI: 10.1111/2041-210X.12361
 %% ~put references to the literature/web site here ~
 }
 \author{Greg R. Guerin

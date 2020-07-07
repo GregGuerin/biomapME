@@ -19,7 +19,7 @@ phylogenetic.diversity.sites(species_records, phylo.tree)
 %%     ~~Describe \code{phylo.tree} here~~
 }
 }
-\details{Unweighted and uncorrected Faith's phylogenetic diversity for community samples organised into sites. Function takes a community matrix (could be species inventories from field plots or map grid cells) and an associated tree with branch lengths. Although coded differently, this is more or less equivalent to the 'pd' function in the 'picante' package. I have pulled it out as a stand-alone function for a community matrix from the unweighted (pd) case of the bopmap::phylogenetic.endemism function, which has point record inputs and gridded map outputs.
+\details{Unweighted and uncorrected Faith's phylogenetic diversity for community samples organised into sites. Function takes a community matrix (could be species inventories from field plots or map grid cells) and an associated tree with branch lengths. Although coded differently, this is more or less equivalent to the 'pd' function in the 'picante' package. I have pulled it out as a stand-alone function for a community matrix from the unweighted (pd) case of the biomapME::phylogenetic.endemism function, which has point record inputs and gridded map outputs.
 %%  ~~ If necessary, more details than the description above ~~
 }
 \value{Returns a vector of PD scores (list with $PD as the vector) for sites in the community matrix.
@@ -29,7 +29,9 @@ phylogenetic.diversity.sites(species_records, phylo.tree)
 %%  \item{comp2 }{Description of 'comp2'}
 %% ...
 }
-\references{Guerin, G.R. and Lowe, A.J. (submitted) Mapping phylogenetic endemism in R using georeferenced branch extents.
+\references{Guerin, G.R. and Lowe, A.J. (2015) Mapping phylogenetic endemism in R using georeferenced branch extents. SoftwareX 3-4, 22–26.
+\cr
+\cr
 Faith, D. P. (1992) Conservation evaluation and phylogenetic diversity. Biological conservation, 61(1), 1-10.
 %% ~put references to the literature/web site here ~
 }
