@@ -317,21 +317,23 @@ phylogenetic.endemism <- function(species_records, records="single", site.coords
 						temp <- temp[-which(temp$edge_i == 0),]
 					} #cls if(any(temp...
 					temp$cells <- row.names(temp)
-					temp <- merge(temp, cell_centroids, by="cells")
-					temp <- data.frame(LONGITUDE=temp$LONGITUDE, LATITUDE=temp$LATITUDE)
+					temp <- merge(temp, cell_centroids, by="cells")[,c("LONGITUDE", "LATITUDE")]
+					coordinates(temp) <- c("LONGITUDE", "LATITUDE")
+					
 					cell_dimensions <- (mean(values(raster::area(frame.raster)))*1000000)^(0.5) #area in km^2 so converting to m^2 to match areaPolygon, then find square root to get back to 1-dimension
-					if(nrow(temp) < 2) {
+					
+					if(nrow(as.data.frame(temp)) < 2) {
 						v[i] <- cell_dimensions
 						warning("Only one record, returning the span of single grid cell for ", colnames(x[i]))
 						} else {
-							if(nrow(temp) < 5) {
-								v[i] <- max(CalcDists(temp))
+							if(nrow(as.data.frame(temp)) < 5) {
+								v[i] <- max(CalcDists(as.data.frame(temp)))
 								if(v[i] < cell_dimensions) {
 									v[i] <- cell_dimensions
 									warning("Range is less than spatial grain of frame.raster, returning span of single grid cell for ", colnames(x[i]))
 								} #cls if(v[i] < cell_dimensions)...
 							} #cls if nrow(temp) < 5...
-							if(nrow(temp) > 4) {
+							if(nrow(as.data.frame(temp)) > 4) {
 								edge_i_range_polygon <- try(mcp(temp, percent=outlier_pct))
 								if(class(edge_i_range_polygon)[1] == "try-error") {
 									v[i] <- max(CalcDists(temp))
