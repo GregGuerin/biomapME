@@ -33,7 +33,7 @@ Additional functionality planned includes:\cr
 }
 \references{Guerin, G.R., Ruokolainen, L. & Lowe, A.J. (2015) A georeferenced implementation of weighted endemism. Methods in Ecology and Evolution 6, 845–852. DOI: 10.1111/2041-210X.12361\cr
 \cr
-Guerin, G.R. & Lowe, A.J. (2015) Sum of inverse range-sizes ('SIR'), a biodiversity metric with many names and interpretations. Biodiversity and Conservation. DOI 10.1007/s10531-015-0977-6
+Guerin, G.R. & Lowe, A.J. (2015) Sum of inverse range-sizes ('SIR'), a biodiversity metric with many names and interpretations. Biodiversity and Conservation 24, 2877–2882. DOI 10.1007/s10531-015-0977-6
 %% ~put references to the literature/web site here ~
 }
 \author{Greg R. Guerin
