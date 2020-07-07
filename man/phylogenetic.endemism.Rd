@@ -57,7 +57,7 @@ phylogenetic.endemism(species_records, records = "single", site.coords, species 
   \item{weight.type}{Range wieght type for calculation of phylogenetic endemism. Default is "cell" (grid cell-based range weights:: phylogenetic range rarity), while "geo" will calculate georeferenced range 'span' weights (georeferenced phylogenetic endemism). Argument is ignored if pe.type="unweighted" or if own.weights are provided.
 %%     ~~Describe \code{weight.type} here~~
 }
-  \item{outlier_pct}{For the calculation of range 'span' via convex polygons, this argument can be used to remove outliers on a percentage basis via the 'mcp' function in package adehabitat, i.e. 95 (default) means 5 percent most outlying points are removed.
+  \item{outlier_pct}{For the calculation of range 'span' via convex polygons, this argument can be used to remove outliers on a percentage basis via the 'mcp' function in package adehabitatHR, i.e. 95 means 5 percent most outlying points are removed. By default, 100, i.e., outliers are not excluded.
 %%     ~~Describe \code{outlier_pct} here~~
 }
   \item{own.weights}{An optional user-supplied numeric vector of branch length weights for calculating phylogenetic endemism. This argument is intended mainly so that time consuming calculation of georeferenced weights can be done once and the result stored and used for subsequent re-runs. Alternatively, user-calculated weights can be used in subsequent runs. The weights must be matched to a matrix representation of phylo.tree (see below).
@@ -92,7 +92,9 @@ For PE only:
 %%  \item{comp2 }{Description of 'comp2'}
 %% ...
 }
-\references{Guerin, G.R. and Lowe, A.J. (submitted) Mapping phylogenetic endemism in R using georeferenced branch extents.
+\references{Guerin, G.R. & Lowe, A.J. (2015) Mapping phylogenetic endemism in R using georeferenced branch extents. SoftwareX 3-4, 22–26.
+\cr
+\cr
 Rosauer, D., Laffan, S. W., Crisp, M. D., Donnellan, S. C. & Cook, L. G. (2009) Phylogenetic endemism: a new approach for identifying geographical concentrations of evolutionary history. Molecular Ecology, 18(19), 4061-4072.
 %% ~put references to the literature/web site here ~
 }
