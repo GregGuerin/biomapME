@@ -11,16 +11,7 @@ phylogenetic.endemism <- function(species_records, records="single", site.coords
 	}
 
 	if(records == "site") {
-		convert <- function(an.occurrence.matrix, site.coords) {
-			dat <-  data.frame(SPECIES = "hold",LONGITUDE = 0,LATITUDE = 0)
-			nam <-  names(an.occurrence.matrix)
-			for(ii in 1:ncol(an.occurrence.matrix)){
-				w <-  an.occurrence.matrix[,ii]>0
-				dat <- rbind(dat, setNames(data.frame(rep(nam[ii],sum(w)),site.coords[w,]), names(dat)))
-			}
-			return(dat[-1,])
-		}
-		species_records <- convert(species_records, site.coords)
+	  species_records <- convert.site.data(species_records, site.coords)
 	}
 
 	if(records == "single") {
@@ -341,12 +332,12 @@ phylogenetic.endemism <- function(species_records, records="single", site.coords
 								} #cls if(v[i] < cell_dimensions)...
 							} #cls if nrow(temp) < 5...
 							if(nrow(temp) > 4) {
-								edge_i_range_polygon <- try(mcp(temp, id=rep(1, nrow(temp)), percent=outlier_pct))
+								edge_i_range_polygon <- try(mcp(temp, percent=outlier_pct))
 								if(class(edge_i_range_polygon)[1] == "try-error") {
 									v[i] <- max(CalcDists(temp))
 								} #cls if(class(edge...
 								if(!class(edge_i_range_polygon)[1] == "try-error") {
-									v[i] <- max(CalcDists(as.data.frame(edge_i_range_polygon[,2:3])))
+									v[i] <- max(CalcDists(as.data.frame(edge_i_range_polygon@polygons[[1]]@Polygons[[1]]@coords)))
 								}	 #cls if(!class(spp...
 								if(v[i] < cell_dimensions) {
 									v[i] <- cell_dimensions
