@@ -1,4 +1,4 @@
-buffer.frags <- function(XY, radius, vegetation.base.raster) {
+buffer.frags <- function(XY, radius, vegetation.base.raster, plot=TRUE, longlat=TRUE) {
 	if(class(XY) == "SpatialPointsDataFrame") {
 		LONG <- coordinates(XY)[,1]
 		LAT <- coordinates(XY)[,2]
@@ -24,6 +24,13 @@ buffer.frags <- function(XY, radius, vegetation.base.raster) {
 	}
 
 
+  if(plot){
+    buffers <- dismo:::.generateCircles(XY, d=radius, lonlat=longlat)
+    plot(vegetation.base.raster)
+    points(XY, pch=20)
+    plot(buffers, add=TRUE)
+  } #cls if plot
+  
 	n <- 0
 	dat <- list()
 	for(i in 1:length(LONG)) {
