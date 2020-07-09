@@ -8,7 +8,7 @@
 %%  ~~ A concise (1-5 lines) description of what the function does. ~~
 }
 \usage{
-buffer.frags(XY, radius, vegetation.base.raster)
+buffer.frags(XY, radius, vegetation.base.raster, plot=TRUE)
 }
 %- maybe also 'usage' for other objects documented here.
 \arguments{
@@ -20,6 +20,9 @@ buffer.frags(XY, radius, vegetation.base.raster)
 }
   \item{vegetation.base.raster}{A \code{RasterLayer} object containing integer classes for the presence of vegetation/habitat/land classes of 1 or more kind.
 %%     ~~Describe \code{vegetation.base.raster} here~~
+}
+\item{plot}{Logical. If \code{TRUE}, the input sites and the requested buffers are overplotted on the raster.
+%%     ~~Describe \code{XY} here~~
 }
 }
 \details{This function is a wrapper for the \code{ClassStat} function from package \code{SDMTools}, which calculates fragstats for a given raster representing a vegetation/habitat matrix. The ClassStat function is applied to a user defined circular area surrounding a site/coordinate, and these are batch processed for multiple sites. The circular buffer is generated through the function \code{raster::buffer}, a process that can be slow for high resolution rasters or large areas.
