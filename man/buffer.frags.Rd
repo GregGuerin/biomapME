@@ -12,20 +12,20 @@ buffer.frags(XY, radius, vegetation.base.raster)
 }
 %- maybe also 'usage' for other objects documented here.
 \arguments{
-  \item{XY}{The x/longitude and y/latitude coordinates of a set of sites provided in either of the following formats. If the coordinates are in columns of a data.frame, then the subsetted data.frame should be given: e.g. XY=df[,"Longitude", "Latitude"] if there are additional columns. If the coordinates are within a SpatialPointsDataFrame, the SPDF can be given for XY (the function will locate the coordinates).
+  \item{XY}{The x/longitude and y/latitude coordinates of a set of sites provided in either of the following formats. If the coordinates are in columns of a data.frame, then the subsetted data.frame should be given: e.g. XY=df[,c("Longitude", "Latitude")] if there are additional columns. If the coordinates are within a SpatialPointsDataFrame, the SPDF can be given for XY (the function will locate the coordinates).
 %%     ~~Describe \code{XY} here~~
 }
   \item{radius}{The radius of the buffer zone around each site within which fragstats are calculated, in units of metres if the 'vegetation.base.raster' is in longlat.
 %%     ~~Describe \code{radius} here~~
 }
-  \item{vegetation.base.raster}{A rasterLayer object containing integer classes for the presence of vegetation/habitat/land classes of 1 or more kind.
+  \item{vegetation.base.raster}{A \code{RasterLayer} object containing integer classes for the presence of vegetation/habitat/land classes of 1 or more kind.
 %%     ~~Describe \code{vegetation.base.raster} here~~
 }
 }
-\details{This function is a wrapper for the ClassStat function from package SDMTools, which calculates fragstats for a given raster representing a vegetation/habitat matrix. The ClassStat function is applied to a user defined circular area surrounding a site/coordinate, and these are batch processed for multiple sites. The circular buffer is generated through the function raster::buffer, which can be slow for high resolution rasters or large areas.
+\details{This function is a wrapper for the \code{ClassStat} function from package \code{SDMTools}, which calculates fragstats for a given raster representing a vegetation/habitat matrix. The ClassStat function is applied to a user defined circular area surrounding a site/coordinate, and these are batch processed for multiple sites. The circular buffer is generated through the function \code{raster::buffer}, a process that can be slow for high resolution rasters or large areas.
 %%  ~~ If necessary, more details than the description above ~~
 }
-\value{Returns a list of data frames, one for each focal location, with fragstat indices as columns and vegetation/habitat classes (read from the input raster) as rows. See example for collapsing the list to a single data.frame object. By default, NA values within the buffer (generally representing non-habitat or non-vegetation) are returned with the value 100 for 'class'. 'Class' will otherwise be the same as the categories in the habitat raster (See ?ClassStat)
+\value{Returns a list of data frames, one for each focal location, with fragstat indices as columns and vegetation/habitat classes (read from the input raster) as rows. See example below for collapsing the list to a single data.frame object. By default, NA values within the buffer (generally representing non-habitat or non-vegetation) are returned with the value 100 for 'class'. 'Class' will otherwise be the same as the categories in the habitat raster (See \code{?ClassStat})
 %%  ~Describe the value returned
 %%  If it is a LIST, use
 %%  \item{comp1 }{Description of 'comp1'}
