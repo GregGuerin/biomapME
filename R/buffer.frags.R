@@ -24,8 +24,8 @@ buffer.frags <- function(XY, radius, vegetation.base.raster, plot=TRUE) {
 	}
 
 
-  if(grep("longlat", projection(vegetation.base.raster)) == 1) {longlat=TRUE} else {longlat=FALSE}
-  longlat
+  if(grep("longlat", projection(vegetation.base.raster)) == 1) {longlat=TRUE} 
+  if(grep("longlat", projection(vegetation.base.raster)) != 1) {longlat=FALSE}
   buffers <- dismo:::.generateCircles(XY, d=radius, lonlat=longlat)
   vegetation.base.raster[is.na(vegetation.base.raster)] <- 100
   
