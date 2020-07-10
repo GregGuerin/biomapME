@@ -23,7 +23,7 @@ buffer.frags(XY, radius, vegetation.base.raster, plot=TRUE)
 \item{plot}{Logical. If \code{TRUE}, the input sites and the requested buffers are overplotted on the raster.
 }
 }
-\details{This function is a wrapper for the \code{ClassStat} function from package \code{SDMTools}, which calculates fragstats for a given raster representing a vegetation/habitat matrix. The \code{ClassStat} function is applied to a user defined circular area surrounding a site/coordinate, and these are batch processed for multiple sites. The circular buffer is generated through the function \code{raster::buffer}, a process that can be slow for high resolution rasters or large areas.
+\details{This function is a wrapper for the \code{ClassStat} function from package \code{SDMTools}, which calculates fragstats for a given raster representing a vegetation/habitat matrix. The \code{ClassStat} function is applied to a user defined circular buffer area surrounding a site/coordinate, and these are batch processed for a set of multiple sites.
 }
 \value{Returns a list of data frames, one for each focal location, with fragstat indices as columns and vegetation/habitat classes (read from the input raster) as rows. See example below for collapsing the list to a single data.frame object. By default, NA values within the buffer (generally representing non-habitat or non-vegetation) are returned with the value 100 for 'class'. 'Class' will otherwise be the same as the categories in the habitat raster (See \code{?ClassStat})
 }
