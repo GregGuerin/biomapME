@@ -25,19 +25,10 @@ convert.site.data(species_records, site.coords)
 \value{Returns a data.frame with three columns, "SPECIES", "LONGITUDE", "LATITUDE".
 }
 \references{Guerin, G.R., Ruokolainen, L. & Lowe, A.J. (2015) A georeferenced implementation of weighted endemism. Methods in Ecology and Evolution. DOI: 10.1111/2041-210X.12361
-%% ~put references to the literature/web site here ~
 }
 \author{Greg R. Guerin & Lasse Ruokolainen
-%%  ~~who you are~~
 }
-\note{
-%%  ~~further notes~~
-}
-
-%% ~Make other sections like Warning with \section{Warning }{....} ~
-
 \seealso{\code{\link{mama}}
-%% ~~objects to See Also as \code{\link{help}}, ~~~
 }
 \examples{
 data(mite)
@@ -45,7 +36,3 @@ data(mite.xy)
 mite_records <- convert.site.data(mite, mite.xy)
 head(mite_records)
 }
-% Add one or more standard keywords, see file 'KEYWORDS' in the
-% R documentation directory.
-\keyword{ ~kwd1 }
-\keyword{ ~kwd2 }% __ONLY ONE__ keyword per line

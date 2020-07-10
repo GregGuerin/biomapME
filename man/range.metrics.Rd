@@ -30,7 +30,7 @@ range.metrics(species_records, species = "SPECIES", longitude = "LONGITUDE", lat
   \item{weight.type}{Default is "cell" (cell-based range metrics), while "geo" will calculate geographic range weights (no rasters).
 %%     ~~Describe \code{weight.type} here~~
 }
-  \item{geo.calc}{Default is "max.dist". This argument is only considered when when weight.type is set to "geo". If geo.calc="max.dist" the default maximum geographic distance (‘span’) between point locations is calculated for a species range. If geo.calc is set to "polygon", the function weights species ranges based on the area of a MCP (minimum convex polygon) that contains all points. Further arguments to this function can be included, such as changing the default outlier_pct=95 (removes outlying locations). To calculate longitudinal/latitudinal range spans, set to: geo.calc = "LONG" or "LAT".
+  \item{geo.calc}{Default is "max.dist". This argument is only considered when when weight.type is set to "geo". If geo.calc="max.dist" the default maximum geographic distance ('span') between point locations is calculated for a species range. If geo.calc is set to "polygon", the function weights species ranges based on the area of a MCP (minimum convex polygon) that contains all points. Further arguments to this function can be included, such as changing the default outlier_pct=95 (removes outlying locations). To calculate longitudinal/latitudinal range spans, set to: geo.calc = "LONG" or "LAT".
 %%     ~~Describe \code{geo.calc} here~~
 }
   \item{outlier_pct}{For the calculation of range span or area via convex polygons (at least 5 records of the species), this argument can be used to remove outliers on a percentage basis via the mcp function in package adehabitat, i.e. 95 means 5 percent most outlying points are removed (the default).
@@ -59,27 +59,16 @@ Georeferenced distance and area range metrics can be calculated longlats (defaul
 %%  ~~ If necessary, more details than the description above ~~
 }
 \value{Returns a list. For cell-based frequency, contains a vector of range scores (number of cells) and a RasterStack containing a RasterLayer showing cell occupancy for each unique species. For georeferenced calculations of range, only a vector of range scores (in m or m^2 or degrees of longitude/latitude if longlat coordinates used)
-%%  ~Describe the value returned
-%%  If it is a LIST, use
-%%  \item{comp1 }{Description of 'comp1'}
-%%  \item{comp2 }{Description of 'comp2'}
-%% ...
 }
-\references{Guerin, G.R., Ruokolainen, L. & Lowe, A.J. (2015) A georeferenced implementation of weighted endemism. Methods in Ecology and Evolution 6, 845–852.  DOI: 10.1111/2041-210X.12361
-%% ~put references to the literature/web site here ~
+\references{Guerin, G.R., Ruokolainen, L. & Lowe, A.J. (2015) A georeferenced implementation of weighted endemism. Methods in Ecology and Evolution 6, 845-852.  DOI: 10.1111/2041-210X.12361
 }
 \author{Greg R. Guerin
-%%  ~~who you are~~
 }
-\note{
-%%  ~~further notes~~
-}
-
-%% ~Make other sections like Warning with \section{Warning }{....} ~
 
 \seealso{\code{\link{weighted.endemism}}
+\cr
+\cr
 \code{\link{letsR::lets.rangesize}}
-%% ~~objects to See Also as \code{\link{help}}, ~~~
 }
 \examples{
 data(mite)
@@ -87,7 +76,3 @@ data(mite.xy)
 mite_records <- convert.site.data(mite, mite.xy)
 range.metrics(mite_records, coord.type="custom", weight.type="geo")
 }
-% Add one or more standard keywords, see file 'KEYWORDS' in the
-% R documentation directory.
-\keyword{ ~kwd1 }
-\keyword{ ~kwd2 }% __ONLY ONE__ keyword per line

@@ -4,7 +4,7 @@
 \title{Phylogenetic endemism null test
 %%  ~~function to do ... ~~
 }
-\description{Taking the outputs from the 'phylogenetic.endemism’ function, tests whether observed phylogenetic diversity/endemism is higher than expected, using non-parametric methods.
+\description{Taking the outputs from the \code{phylogenetic.endemism} function, tests whether observed phylogenetic diversity/endemism is higher than expected, using non-parametric methods.
 %%  ~~ A concise (1-5 lines) description of what the function does. ~~
 }
 \usage{
@@ -52,29 +52,18 @@ Raw phylogenetic diversity/endemism scores are biased both by the completeness o
   \item{$richness }{Vector of simple observed species richness scores for cells.}
 }
 \references{Guerin, G.R. and Lowe, A.J. (submitted) Mapping phylogenetic endemism in R using georeferenced branch extents.
-%% ~put references to the literature/web site here ~
 }
 \author{Greg R. Guerin
-%%  ~~who you are~~
 }
-\note{
-%%  ~~further notes~~
-}
-
-%% ~Make other sections like Warning with \section{Warning }{....} ~
 
 \seealso{\code{\link{phylogenetic.endemism}}
-%% ~~objects to See Also as \code{\link{help}}, ~~~
 }
 \examples{
 data(mite)
 data(mite.xy)
-mite.tree <- rtree(n=ncol(mite), tip.label=colnames(mite)) #for this example, generate a phylogenetic tree of the species in the mite dataset with random relationships and branch lengths
+#for example, generate phylogenetic tree of species with random relationships and branch lengths
+mite.tree <- rtree(n=ncol(mite), tip.label=colnames(mite)) 
 mite.PE <- phylogenetic.endemism(mite, records="site", site.coords=mite.xy, sep.comm.spp="none", phylo.tree=mite.tree, sep.phylo.spp="none", weight.type="cell")
 pe.mite.test <- pe.null.test(mite.PE)
 pe.mite.test
 }
-% Add one or more standard keywords, see file 'KEYWORDS' in the
-% R documentation directory.
-\keyword{ ~kwd1 }
-\keyword{ ~kwd2 }% __ONLY ONE__ keyword per line

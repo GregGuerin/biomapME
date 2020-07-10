@@ -4,7 +4,7 @@
 \title{Batch fragmentation/class stats for circular buffers
 %%  ~~function to do ... ~~
 }
-\description{Batch calculates habitat fragmentation indices (‘fragstats’) within a circular buffer zone around sites.
+\description{Batch calculates habitat fragmentation indices ('fragstats') within a circular buffer zone around sites.
 %%  ~~ A concise (1-5 lines) description of what the function does. ~~
 }
 \usage{
@@ -68,7 +68,3 @@ frags <- buffer.frags(eg.coords, radius=150000, vegetation.base.raster=eg.rast)
 frags <- do.call(rbind, frags) #TO CONDENSE INTO SINGLE DATA.FRAME
 frags #NOTE:class =100 in 'frags' is the default for NAs in the input raster (i.e. no habitat/vegetation).
 }
-% Add one or more standard keywords, see file 'KEYWORDS' in the
-% R documentation directory.
-\keyword{ ~kwd1 }
-\keyword{ ~kwd2 }% __ONLY ONE__ keyword per line

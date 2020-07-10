@@ -23,38 +23,24 @@ phylogenetic.diversity.sites(species_records, phylo.tree)
 %%  ~~ If necessary, more details than the description above ~~
 }
 \value{Returns a vector of PD scores (list with $PD as the vector) for sites in the community matrix.
-%%  ~Describe the value returned
-%%  If it is a LIST, use
-%%  \item{comp1 }{Description of 'comp1'}
-%%  \item{comp2 }{Description of 'comp2'}
-%% ...
 }
-\references{Guerin, G.R. and Lowe, A.J. (2015) Mapping phylogenetic endemism in R using georeferenced branch extents. SoftwareX 3-4, 22–26.
+\references{Guerin, G.R. and Lowe, A.J. (2015) Mapping phylogenetic endemism in R using georeferenced branch extents. SoftwareX 3-4, 22-26.
 \cr
 \cr
-Faith, D. P. (1992) Conservation evaluation and phylogenetic diversity. Biological conservation, 61(1), 1-10.
-%% ~put references to the literature/web site here ~
+Faith, D. P. (1992) Conservation evaluation and phylogenetic diversity. Biological conservation, 61, 1-10.
 }
 \author{Greg .R. Guerin
-%%  ~~who you are~~
 }
-\note{
-%%  ~~further notes~~
-}
-
-%% ~Make other sections like Warning with \section{Warning }{....} ~
 
 \seealso{\code{\link{phylogenetic.endemism}}
+\cr
+\cr
 \code{\link{picante::pd}}
-%% ~~objects to See Also as \code{\link{help}}, ~~~
 }
 \examples{
 data(mite)
-mite.tree <- rtree(n=ncol(mite), tip.label=colnames(mite)) #for this example, generate a phylogenetic tree of the species in the mite dataset with random relationships and branch lengths.
+#for example, generate phylogenetic tree of species in dataset with random relationships and branch lengths
+mite.tree <- rtree(n=ncol(mite), tip.label=colnames(mite))
 mite.PD <- phylogenetic.diversity.sites(mite, phylo.tree=mite.tree)
 mite.PD
 }
-% Add one or more standard keywords, see file 'KEYWORDS' in the
-% R documentation directory.
-\keyword{ ~kwd1 }
-\keyword{ ~kwd2 }% __ONLY ONE__ keyword per line

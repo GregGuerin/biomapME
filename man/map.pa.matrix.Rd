@@ -13,7 +13,7 @@ map.pa.matrix(species_records, records = "single", site.coords, species = "SPECI
 %- maybe also 'usage' for other objects documented here.
 \arguments{
   \item{species_records}{A data.frame, either with:
-  a) rows as individual species records, and columns that include fields for species name, longitude and latitude (see ‘species’, ‘longitude’, ‘latitude’ below); or
+  a) rows as individual species records, and columns that include fields for species name, longitude and latitude (see 'species', 'longitude', 'latitude' below); or
   b) rows as sites and columns as species, in which case ‘site.coords’ (below) must also be supplied.
 %%     ~~Describe \code{species_records} here~~
 }
@@ -47,27 +47,20 @@ map.pa.matrix(species_records, records = "single", site.coords, species = "SPECI
 }
 \value{Returns a list of length 2:
   \item{$grid.matrix }{A binary data.frame of species occurrences against grid cell numbers that match those in $pa.raster.}
-  \item{$pa.raster }{A ‘raster’ object for which species presence/absence is scored in $grid.matrix.}
+  \item{$pa.raster }{A \code{RasterLayer} object for which species presence/absence is scored in $grid.matrix.}
 %%  ~Describe the value returned
 %%  If it is a LIST, use
 %%  \item{comp1 }{Description of 'comp1'}
 %%  \item{comp2 }{Description of 'comp2'}
 %% ...
 }
-\references{Guerin, G.R., Ruokolainen, L. & Lowe, A.J. (2015) A georeferenced implementation of weighted endemism. Methods in Ecology and Evolution 6, 845–852. DOI: 10.1111/2041-210X.12361
+\references{Guerin, G.R., Ruokolainen, L. & Lowe, A.J. (2015) A georeferenced implementation of weighted endemism. Methods in Ecology and Evolution 6, 845-852. DOI: 10.1111/2041-210X.12361
 %% ~put references to the literature/web site here ~
 }
 \author{Greg R. Guerin & Lasse Ruokolainen
-%%  ~~who you are~~
 }
-\note{
-%%  ~~further notes~~
-}
-
-%% ~Make other sections like Warning with \section{Warning }{....} ~
 
 \seealso{\code{\link{letsR::lets.presab}}
-%% ~~objects to See Also as \code{\link{help}}, ~~~
 }
 \examples{
 #####Preparation for this example:
@@ -77,7 +70,3 @@ data(mite.xy)
 ####Usage of the function:
 map.pa.matrix(mite, records="site", site.coords=mite.xy)
 }
-% Add one or more standard keywords, see file 'KEYWORDS' in the
-% R documentation directory.
-\keyword{ ~kwd1 }
-\keyword{ ~kwd2 }% __ONLY ONE__ keyword per line

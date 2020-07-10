@@ -53,15 +53,9 @@ Raw weighted endemism scores are biased both by the completeness of species samp
 \author{Greg R. Guerin & Lasse Ruokolainen
 %%  ~~who you are~~
 }
-\note{
-%%  ~~further notes~~
-}
-
-%% ~Make other sections like Warning with \section{Warning }{....} ~
 
 \seealso{
   \code{\link{weighted.endemism}}
-%% ~~objects to See Also as \code{\link{help}}, ~~~
 }
 \examples{
 library(vegan)
@@ -72,7 +66,3 @@ endemism_mydata <- weighted.endemism(mite, site.coords=mite.xy, records="site")
 
 endemism.test.example <- endemism.null.test(endemism_mydata)
 }
-% Add one or more standard keywords, see file 'KEYWORDS' in the
-% R documentation directory.
-\keyword{ ~kwd1 }
-\keyword{ ~kwd2 }% __ONLY ONE__ keyword per line

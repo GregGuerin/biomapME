@@ -12,7 +12,7 @@ phylogenetic.endemism(species_records, records = "single", site.coords, species 
 }
 %- maybe also 'usage' for other objects documented here.
 \arguments{
-  \item{species_records}{A data.frame, either with: <b>a)</<b> rows as individual species records, and columns that include fields for species name, longitude and latitude (see ‘species’, ‘longitude’, ‘latitude’ below); or <b>b)</b> rows as sites and columns as species, in which case ‘site.coords’ (below) must also be supplied.
+  \item{species_records}{A data.frame, either with: a) rows as individual species records, and columns that include fields for species name, longitude and latitude (see 'species', 'longitude', 'latitude' below); or b) rows as sites and columns as species, in which case 'site.coords' (below) must also be supplied.
 %%     ~~Describe \code{species_records} here~~
 }
   \item{records}{Are the species_records in single/long format (the default, records="single") or in site-based/short format (records="site").
@@ -30,13 +30,13 @@ phylogenetic.endemism(species_records, records = "single", site.coords, species 
   \item{latitude}{For records="single"; what colname in the supplied species_records contains latitude values?
 %%     ~~Describe \code{latitude} here~~
 }
-  \item{sep.comm.spp}{The genus_species separating character in the community data. If there is none (i.e. taxon names represented by a single 'word'), argument should be set to sep.comm.spp=“none". The purpose of this argument is that it is common for separators to differ between community data and phylogenetic trees due to the different processing functions applied, and to avoid having to reformat the data, this argument allows them to be matched within the function. Default is a space.
+  \item{sep.comm.spp}{The genus_species separating character in the community data. If there is none (i.e. taxon names represented by a single 'word'), argument should be set to \code{sep.comm.spp="none"}. The purpose of this argument is that it is common for separators to differ between community data and phylogenetic trees due to the different processing functions applied, and to avoid having to reformat the data, this argument allows them to be matched within the function. Default is a space.
 %%     ~~Describe \code{sep.comm.spp} here~~
 }
   \item{phylo.tree}{A phylogenetic tree of class 'phylo' containing species in the occurrence data. Must have branch lengths.
 %%     ~~Describe \code{phylo.tree} here~~
 }
-  \item{sep.phylo.spp}{The genus_species separating character in the phylo.tree (tip.labels). If there is none (i.e. taxon names represented by a single 'word'), argument should be set to sep.phylo.spp=“none". See sep.comm.spp argument for purpose. Default for phylo.tree is an underscore, as this is a common format in community ecology using e.g. phylomatic trees.
+  \item{sep.phylo.spp}{The genus_species separating character in the phylo.tree (tip.labels). If there is none (i.e. taxon names represented by a single 'word'), argument should be set to \code{sep.phylo.spp="none"}. See sep.comm.spp argument for purpose. Default for phylo.tree is an underscore, as this is a common format in community ecology using e.g. phylomatic trees.
 %%     ~~Describe \code{sep.phylo.spp} here~~
 }
   \item{frame.raster}{An existing rasterLayer object. User can elect to supply a raster as the frame for calculations and mapping. If not specified, the function will generate a raster based on default or specified extent and resolution.
@@ -86,29 +86,16 @@ For PE only:
   \item{$phyloMatrix }{A binary matrix representation of the phylo.tree, returned mainly for convenience for downstream use (skipped if pe.type="unweighted"). }
   \item{$phylo.cell.matrix }{A binary matrix recording the presence of particular phylogenetic branches in map grid cells used in the function, which is returned for re-use in subsequent runs for efficiency (e.g. with different weights), (skipped if pe.type="unweighted"). }
   \item{$edge.lengths }{A numeric vector of edge lengths from the phylo.tree }
-%%  ~Describe the value returned
-%%  If it is a LIST, use
-%%  \item{comp1 }{Description of 'comp1'}
-%%  \item{comp2 }{Description of 'comp2'}
-%% ...
 }
-\references{Guerin, G.R. & Lowe, A.J. (2015) Mapping phylogenetic endemism in R using georeferenced branch extents. SoftwareX 3-4, 22–26.
+\references{Guerin, G.R. & Lowe, A.J. (2015) Mapping phylogenetic endemism in R using georeferenced branch extents. SoftwareX 3-4, 22-26.
 \cr
 \cr
-Rosauer, D., Laffan, S. W., Crisp, M. D., Donnellan, S. C. & Cook, L. G. (2009) Phylogenetic endemism: a new approach for identifying geographical concentrations of evolutionary history. Molecular Ecology, 18(19), 4061-4072.
-%% ~put references to the literature/web site here ~
+Rosauer, D., Laffan, S. W., Crisp, M. D., Donnellan, S. C. & Cook, L. G. (2009) Phylogenetic endemism: a new approach for identifying geographical concentrations of evolutionary history. Molecular Ecology, 18, 4061-4072.
 }
 \author{Greg R. Guerin
-%%  ~~who you are~~
 }
-\note{
-%%  ~~further notes~~
-}
-
-%% ~Make other sections like Warning with \section{Warning }{....} ~
 
 \seealso{\code{\link{pe.null.test}}
-%% ~~objects to See Also as \code{\link{help}}, ~~~
 }
 \examples{
 data(mite)
@@ -117,7 +104,3 @@ mite.tree <- rtree(n=ncol(mite), tip.label=colnames(mite)) #for this example, ge
 mite.PE <- phylogenetic.endemism(mite, records="site", site.coords=mite.xy, sep.comm.spp="none", phylo.tree=mite.tree, sep.phylo.spp="none", weight.type="cell")
 mite.PE
 }
-% Add one or more standard keywords, see file 'KEYWORDS' in the
-% R documentation directory.
-\keyword{ ~kwd1 }
-\keyword{ ~kwd2 }% __ONLY ONE__ keyword per line
