@@ -1,9 +1,6 @@
 pe.null.test <- function(phylogenetic.endemism.output, nrep = 100, outlier.range = 1.5, pe.type="weighted", phylo.tree)
   {
 
-# 	require(raster)
-# 	require(ape)
-
 	if(class(phylogenetic.endemism.output) != "list") {
 		stop("Input data must be a list")
 	}
