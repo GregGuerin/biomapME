@@ -8,7 +8,8 @@
 %%  ~~ A concise (1-5 lines) description of what the function does. ~~
 }
 \usage{
-pe.null.test(phylogenetic.endemism.output, nrep = 100, outlier.range = 1.5, pe.type = "weighted", phylo.tree)
+pe.null.test(phylogenetic.endemism.output, nrep = 100, outlier.range = 1.5,
+pe.type = "weighted", phylo.tree)
 }
 %- maybe also 'usage' for other objects documented here.
 \arguments{
@@ -63,7 +64,8 @@ data(mite)
 data(mite.xy)
 #for example, generate phylogenetic tree of species with random relationships and branch lengths
 mite.tree <- rtree(n=ncol(mite), tip.label=colnames(mite)) 
-mite.PE <- phylogenetic.endemism(mite, records="site", site.coords=mite.xy, sep.comm.spp="none", phylo.tree=mite.tree, sep.phylo.spp="none", weight.type="cell")
+mite.PE <- phylogenetic.endemism(mite, records="site", site.coords=mite.xy, 
+sep.comm.spp="none", phylo.tree=mite.tree, sep.phylo.spp="none", weight.type="cell")
 pe.mite.test <- pe.null.test(mite.PE)
 pe.mite.test
 }
