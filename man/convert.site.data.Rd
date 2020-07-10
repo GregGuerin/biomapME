@@ -11,7 +11,7 @@ to allow this data format as input to other biodiversity mapping functions, in w
 %%  ~~ A concise (1-5 lines) description of what the function does. ~~
 }
 \usage{
-convert.sites.data(species_records, site.coords)
+convert.site.data(species_records, site.coords)
 }
 %- maybe also 'usage' for other objects documented here.
 \arguments{
@@ -23,9 +23,6 @@ convert.sites.data(species_records, site.coords)
 %%  ~~ If necessary, more details than the description above ~~
 }
 \value{Returns a data.frame with three columns, "SPECIES", "LONGITUDE", "LATITUDE".
-}
-\description{This function converts species occurrence data from site- to individual species record-based. This conversion could be useful in any situation where individual species records are required, but was designed primarily to allow this data format as input to other biodiversity mapping functions, in which case this conversion makes plot-based data compatible with the format of herbarium or musem records, for example.
-%%  ~~ A concise (1-5 lines) description of what the function does. ~~
 }
 \references{Guerin, G.R., Ruokolainen, L. & Lowe, A.J. (2015) A georeferenced implementation of weighted endemism. Methods in Ecology and Evolution. DOI: 10.1111/2041-210X.12361
 %% ~put references to the literature/web site here ~
