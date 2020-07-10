@@ -31,7 +31,8 @@ Guerin, G.R. (2020) biomap: Biodiversity Mapping and Macroecology. R package v2.
 
 biomapME v1.0 (archived) can be cited as:
 ```
-Guerin, G.R. (2015) biomap: Biodiversity Mapping Package. : Initial release. R package v1.0. (https://github.com/GregGuerin/biomap) (https://doi.org/10.5281/zenodo.23116)```
+Guerin, G.R. (2015) biomap: Biodiversity Mapping Package: Initial release. R package v1.0. (https://github.com/GregGuerin/biomap) (https://doi.org/10.5281/zenodo.23116)
+```
 
 [![DOI](https://zenodo.org/badge/doi/10.5281/zenodo.23116.svg)](http://dx.doi.org/10.5281/zenodo.23116)
 
