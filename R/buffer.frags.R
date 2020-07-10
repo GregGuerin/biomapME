@@ -1,7 +1,7 @@
 buffer.frags <- function(XY, radius, vegetation.base.raster, plot=TRUE) {
 	if(class(XY) == "SpatialPointsDataFrame") {
-		LONG <- coordinates(XY)[,1]
-		LAT <- coordinates(XY)[,2]
+		LONG <- sp::coordinates(XY)[,1]
+		LAT <- sp::coordinates(XY)[,2]
 	}
 
 
@@ -50,8 +50,8 @@ buffer.frags <- function(XY, radius, vegetation.base.raster, plot=TRUE) {
 		# temp.rast[is.na(temp.rast)] <- 100
 		# temp.rast[outer.cells] <- NA
 		# plot(temp.rast)
-		temp.rast <- mask(vegetation.base.raster, buffers@polygons[n])
-		dat[[n]] <- ClassStat(temp.rast)
+		temp.rast <- raster::mask(vegetation.base.raster, buffers@polygons[n])
+		dat[[n]] <- SDMTools::ClassStat(temp.rast)
 		}
 		try(names(dat) <- row.names(XY))
 		return(dat)

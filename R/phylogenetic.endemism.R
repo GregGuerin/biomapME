@@ -30,7 +30,7 @@ phylogenetic.endemism <- function(species_records, records="single", site.coords
 		species_records <- species_records[-which(is.na(species_records$LATITUDE)),]
 	}
 
-	coordinates(species_records) <- c("LONGITUDE", "LATITUDE")
+	sp::coordinates(species_records) <- c("LONGITUDE", "LATITUDE")
 
 	if(class(phylo.tree) != "phylo") {
 		stop("Phylogenetic tree must be in 'phylo' format")
@@ -318,7 +318,7 @@ phylogenetic.endemism <- function(species_records, records="single", site.coords
 					} #cls if(any(temp...
 					temp$cells <- row.names(temp)
 					temp <- merge(temp, cell_centroids, by="cells")[,c("LONGITUDE", "LATITUDE")]
-					coordinates(temp) <- c("LONGITUDE", "LATITUDE")
+					sp::coordinates(temp) <- c("LONGITUDE", "LATITUDE")
 					
 					cell_dimensions <- (mean(values(raster::area(frame.raster)))*1000000)^(0.5) #area in km^2 so converting to m^2 to match areaPolygon, then find square root to get back to 1-dimension
 					
@@ -334,7 +334,7 @@ phylogenetic.endemism <- function(species_records, records="single", site.coords
 								} #cls if(v[i] < cell_dimensions)...
 							} #cls if nrow(temp) < 5...
 							if(nrow(as.data.frame(temp)) > 4) {
-								edge_i_range_polygon <- try(mcp(temp, percent=outlier_pct))
+								edge_i_range_polygon <- try(adehabitatHR::mcp(temp, percent=outlier_pct))
 								if(class(edge_i_range_polygon)[1] == "try-error") {
 									v[i] <- max(CalcDists(temp))
 								} #cls if(class(edge...

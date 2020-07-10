@@ -31,7 +31,7 @@ range.metrics <- function(species_records, species="SPECIES", longitude="LONGITU
 		species_records <- species_records[-which(is.na(species_records$LATITUDE)),]
 	} #cls NA latitude
 
-	coordinates(species_records) <- c("LONGITUDE", "LATITUDE")
+	sp::coordinates(species_records) <- c("LONGITUDE", "LATITUDE")
 
 	#####
 	if(plot.out == TRUE) {
@@ -128,7 +128,7 @@ range.metrics <- function(species_records, species="SPECIES", longitude="LONGITU
 		    for (i in 1:n) {
 		      for (j in 1:n) {
 		        if(coord.type=="longlat") {
-		          z[i, j] <- distCosine(c(longlats[j, 1], longlats[j, 2]), c(longlats[i, 1], longlats[i, 2]))
+		          z[i, j] <- geosphere::distCosine(c(longlats[j, 1], longlats[j, 2]), c(longlats[i, 1], longlats[i, 2]))
 		        } #cls if(missing(XY))
 		        if(coord.type=="custom") {
 		          z[i, j] <- sqrt(sum((c(longlats[j, 1], longlats[j, 2]) - c(longlats[i, 1], longlats[i, 2])) ^ 2))
@@ -164,7 +164,7 @@ range.metrics <- function(species_records, species="SPECIES", longitude="LONGITU
 		            v[n] <- max(CalcDists(temp2))
 		          } #cls if(nrow(temp) < 5)...
 		          if(nrow(temp) > 4) {
-		            spp_i_range_polygon <- try(mcp(temp, percent=outlier_pct))
+		            spp_i_range_polygon <- try(adehabitatHR::mcp(temp, percent=outlier_pct))
 		            if(class(spp_i_range_polygon)[1] == "try-error") {
 		              temp2 <- data.frame(LONGITUDE=temp$LONGITUDE, LATITUDE=temp$LATITUDE)
 		              v[n] <- max(CalcDists(temp2))
@@ -179,10 +179,10 @@ range.metrics <- function(species_records, species="SPECIES", longitude="LONGITU
 		      if(geo.calc == "polygon") {
 		        if(nrow(temp) < 5) {
 		          if(coord.type=="longlat") {
-		            polygon_area <- try(areaPolygon(temp))
+		            polygon_area <- try(geosphere::areaPolygon(temp))
 		          } #cls if(coord.type="longlat")
 		          if(coord.type=="custom") {
-		            polygon_area <- try(abs(polyarea(temp[,"LONGITUDE"], temp[,"LATITUDE"])))
+		            polygon_area <- try(abs(pracma::polyarea(temp[,"LONGITUDE"], temp[,"LATITUDE"])))
 		          } #cls if(coord.type="custom")
 		          if(class(polygon_area) == "try-error") {
 		            v[n] <- 1
@@ -200,17 +200,17 @@ range.metrics <- function(species_records, species="SPECIES", longitude="LONGITU
 		          } #cls if(class(polyon_area) == "numeric...
 		        } #cls if(nrow(temp) < 5)...
 		        if(nrow(temp) > 4) {
-		          spp_i_range_polygon <- try(mcp(temp, percent=outlier_pct))
+		          spp_i_range_polygon <- try(adehabitatHR::mcp(temp, percent=outlier_pct))
 		          if(class(spp_i_range_polygon)[1] == "try-error") {
 		            v[n] <- 1
 		            warning("Unable to compute a polygon, returning 1 as the range area for ", i)
 		          } #cls if(class(spp...
 		          if(class(spp_i_range_polygon)[1] != "try-error") {
 		            if(coord.type=="longlat") {
-		              polygon_area <- try(areaPolygon(as.data.frame(spp_i_range_polygon@polygons[[1]]@Polygons[[1]]@coords)))
+		              polygon_area <- try(geosphere::areaPolygon(as.data.frame(spp_i_range_polygon@polygons[[1]]@Polygons[[1]]@coords)))
 		            } #cls if(coord.type="longlat")
 		            if(coord.type=="custom") {
-		              polygon_area <- try(abs(polyarea(spp_i_range_polygon@polygons[[1]]@Polygons[[1]]@coords[,"LONGITUDE"], spp_i_range_polygon@polygons[[1]]@Polygons[[1]]@coords[,"LATITUDE"])))
+		              polygon_area <- try(abs(pracma::polyarea(spp_i_range_polygon@polygons[[1]]@Polygons[[1]]@coords[,"LONGITUDE"], spp_i_range_polygon@polygons[[1]]@Polygons[[1]]@coords[,"LATITUDE"])))
 		            } #cls if(coord.type="custom")
 		            if(class(polygon_area) == "try-error") {
 		              v[n] <- 1

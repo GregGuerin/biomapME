@@ -32,7 +32,7 @@ map.pa.matrix <- function(species_records, records="single", site.coords, specie
 
 
 	if(missing(frame.raster)) {
-		frame.raster <- raster()
+		frame.raster <- raster::raster()
 		if(missing(extent.vector)) {
 			extent(frame.raster)@xmin <- floor(extent(species_records)@xmin)
 			extent(frame.raster)@ymin <- floor(extent(species_records)@ymin)
@@ -40,9 +40,9 @@ map.pa.matrix <- function(species_records, records="single", site.coords, specie
 			extent(frame.raster)@ymax <- ceiling(extent(species_records)@ymax)
 			}
 		if(!(missing(extent.vector))) {
-			extent(frame.raster) <- extent.vector
+			raster::extent(frame.raster) <- extent.vector
 		}
-		res(frame.raster) <- deg.resolution
+		raster::res(frame.raster) <- deg.resolution
 		cat("Generating frame raster at ", deg.resolution, " resolution and extent defined by: ", extent(frame.raster)@xmin, extent(frame.raster)@xmax, extent(frame.raster)@ymin, extent(frame.raster)@ymax,"\n")
 	} #cls if(missing. . .
 
@@ -56,7 +56,7 @@ map.pa.matrix <- function(species_records, records="single", site.coords, specie
 
 
 			cat("Generating the gridded occurrence matrix", "\n")
-			cell_numbers <- cellFromXY(frame.raster, species_records)
+			cell_numbers <- raster::cellFromXY(frame.raster, species_records)
 			cell_occur_matrix_prep <- data.frame(cell=cell_numbers, species=species_records$SPECIES, presence=rep(1, length(cell_numbers)))
 			cell_occur_matrix_prep$species <- factor(cell_occur_matrix_prep$species)
 			if(any(duplicated(cell_occur_matrix_prep))) {

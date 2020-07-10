@@ -25,7 +25,7 @@ phylogenetic.diversity.sites <- function(species_records, phylo.tree)
 		PDmatFunc <- function(x, phylo.tree) {
 			x <- x[,which(x>0)]
 			drops <- setdiff(phylo.tree$tip.label, colnames(x))
-			if(class(x) == "data.frame") {sub <- drop.tip(phylo.tree, drops)
+			if(class(x) == "data.frame") {sub <- ape::drop.tip(phylo.tree, drops)
 			return(sum(sub$edge.length))} else {return(NA)}
 			}
 
