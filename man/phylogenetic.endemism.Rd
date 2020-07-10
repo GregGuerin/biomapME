@@ -80,9 +80,8 @@ Rosauer, D., Laffan, S. W., Crisp, M. D., Donnellan, S. C. & Cook, L. G. (2009) 
 \examples{
 data(mite)
 data(mite.xy)
-mite.tree <- rtree(n=ncol(mite), tip.label=colnames(mite)) #for this example, 
-generate a phylogenetic tree of the species in the mite dataset with random 
-relationships and branch lengths
+#for example, generate random phylogenetic tree of species in dataset
+mite.tree <- rtree(n=ncol(mite), tip.label=colnames(mite)) 
 mite.PE <- phylogenetic.endemism(mite, records="site", site.coords=mite.xy, 
 sep.comm.spp="none", phylo.tree=mite.tree, sep.phylo.spp="none", weight.type="cell")
 mite.PE
