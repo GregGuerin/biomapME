@@ -78,6 +78,7 @@ Rosauer, D., Laffan, S. W., Crisp, M. D., Donnellan, S. C. & Cook, L. G. (2009) 
 \seealso{\code{\link{pe.null.test}}
 }
 \examples{
+library(vegan)
 data(mite)
 data(mite.xy)
 #for example, generate random phylogenetic tree of species in dataset

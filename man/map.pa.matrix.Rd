@@ -11,8 +11,8 @@ deg.resolution = c(0.25, 0.25), extent.vector)
 }
 \arguments{
   \item{species_records}{A data.frame, either with:
-  a) rows as individual species records, and columns that include fields for species name, longitude and latitude (see 'species', 'longitude', 'latitude' below); or
-  b) rows as sites and columns as species, in which case ‘site.coords’ (below) must also be supplied.
+  a) rows as individual species records, and columns that include fields for species name, longitude and latitude (see  = species = , 'longitude', 'latitude' below); or
+  b) rows as sites and columns as species, in which case 'site.coords' (below) must also be supplied.
 }
   \item{records}{Are the species_records in single/long format (the default, records="single") or in site-based/short format (records="site")?
 }

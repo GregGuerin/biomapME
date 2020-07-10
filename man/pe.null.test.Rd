@@ -60,6 +60,7 @@ Raw phylogenetic diversity/endemism scores are biased both by the completeness o
 \seealso{\code{\link{phylogenetic.endemism}}
 }
 \examples{
+library(vegan)
 data(mite)
 data(mite.xy)
 #for example, generate phylogenetic tree of species with random relationships and branch lengths

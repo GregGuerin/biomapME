@@ -38,6 +38,7 @@ Faith, D. P. (1992) Conservation evaluation and phylogenetic diversity. Biologic
 \code{\link{picante::pd}}
 }
 \examples{
+library(vegan)
 data(mite)
 #generate random phylogenetic tree
 mite.tree <- ape::rtree(n=ncol(mite), tip.label=colnames(mite))

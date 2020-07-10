@@ -25,6 +25,7 @@ convert.site.data(species_records, site.coords)
 \seealso{\code{\link{mama}}
 }
 \examples{
+library(vegan)
 data(mite)
 data(mite.xy)
 mite_records <- convert.site.data(mite, mite.xy)

@@ -57,6 +57,7 @@ Georeferenced distance and area range metrics can be calculated longlats (defaul
 \code{\link{letsR::lets.rangesize}}
 }
 \examples{
+library(vegan)
 data(mite)
 data(mite.xy)
 mite_records <- convert.site.data(mite, mite.xy)
