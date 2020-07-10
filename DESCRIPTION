@@ -5,9 +5,22 @@ Version: 2.0
 Date: 2020-06-24
 Author: Greg R. Guerin
 Maintainer: Greg Guerin <ggueri01@gmail.com>
-Depends: geosphere, simba, raster, SDMTools, ape, pracma, maps, vegan, adehabitatHR, dismo, sp
+Depends: R (>= 3.1.0)
 Suggests:
-Imports: grDevices, stats
+Imports:
+    geosphere, 
+    simba, 
+    raster, 
+    SDMTools, 
+    ape, 
+    pracma, 
+    maps, 
+    vegan, 
+    adehabitatHR, 
+    dismo, 
+    sp, 
+    grDevices, 
+    stats
 Description: R functions for generating gridded biodiversity maps from point (incidence) data.
 License: GNU GPL-3
 LazyData: TRUE
