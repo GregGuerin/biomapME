@@ -51,8 +51,6 @@ buffer.frags <- function(XY, radius, vegetation.base.raster, plot=TRUE) {
 		# temp.rast[outer.cells] <- NA
 		# plot(temp.rast)
 		temp.rast <- mask(vegetation.base.raster, buffers[n])
-		#if(plot) {dev.new()
-		#plot(temp.rast)}
 		dat[[n]] <- ClassStat(temp.rast)
 		}
 		try(names(dat) <- row.names(XY))
