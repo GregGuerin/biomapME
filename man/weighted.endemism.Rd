@@ -8,7 +8,7 @@
 %%  ~~ A concise (1-5 lines) description of what the function does. ~~
 }
 \usage{
-weighted.endemism(species_records, records = "single", site.coords, species = "SPECIES", longitude = "LONGITUDE", latitude = "LATITUDE", frame.raster, deg.resolution = c(0.25, 0.25), extent.vector, type = "weighted", plot.raster = TRUE, own.weights, weight.type = "cell", geo.type = "cell", geo.calc = "max.dist", outlier_pct = 95, verbose = TRUE, own.grid.matrix)
+weighted.endemism(species_records, records = "single", site.coords, species = "SPECIES", longitude = "LONGITUDE", latitude = "LATITUDE", frame.raster, deg.resolution = c(0.25, 0.25), extent.vector, type = "weighted", plot.raster = TRUE, own.weights, weight.type = "cell", geo.type = "cell", geo.calc = "max.dist", outlier_pct = 100, verbose = TRUE, own.grid.matrix)
 }
 %- maybe also 'usage' for other objects documented here.
 \arguments{

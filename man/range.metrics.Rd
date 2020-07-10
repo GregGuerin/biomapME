@@ -8,7 +8,7 @@
 %%  ~~ A concise (1-5 lines) description of what the function does. ~~
 }
 \usage{
-range.metrics(species_records, species = "SPECIES", longitude = "LONGITUDE", latitude = "LATITUDE", coord.type = "longlat", weight.type = "cell", geo.calc = "max.dist", outlier_pct = 95, verbose = TRUE, frame.raster, deg.resolution = c(0.25, 0.25), extent.vector, plot.out = TRUE)
+range.metrics(species_records, species = "SPECIES", longitude = "LONGITUDE", latitude = "LATITUDE", coord.type = "longlat", weight.type = "cell", geo.calc = "max.dist", outlier_pct = 100, verbose = TRUE, frame.raster, deg.resolution = c(0.25, 0.25), extent.vector, plot.out = TRUE)
 }
 %- maybe also 'usage' for other objects documented here.
 \arguments{
