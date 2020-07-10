@@ -50,5 +50,5 @@ frags <- suppressWarnings(buffer.frags(eg.coords, radius=150000, vegetation.base
 #TO CONDENSE INTO SINGLE DATA.FRAME
 frags <- do.call(rbind, frags) 
 frags
-#NOTE:class = 100 in 'frags' is the default for NAs in the input raster (i.e. no habitat/vegetation).
+#NOTE:class = 100 is default output for NA input raster cells.
 }

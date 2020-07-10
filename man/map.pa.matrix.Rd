@@ -6,8 +6,8 @@
 }
 \usage{
 map.pa.matrix(species_records, records = "single", site.coords, species = "SPECIES",
-longitude = "LONGITUDE", latitude = "LATITUDE", frame.raster, deg.resolution = c(0.25, 0.25),
-extent.vector)
+longitude = "LONGITUDE", latitude = "LATITUDE", frame.raster, 
+deg.resolution = c(0.25, 0.25), extent.vector)
 }
 \arguments{
   \item{species_records}{A data.frame, either with:
