@@ -26,7 +26,7 @@ buffer.frags <- function(XY, radius, vegetation.base.raster, plot=TRUE) {
 
   if(1 %in% grep("longlat", projection(vegetation.base.raster))) {longlat=TRUE} else { 
   longlat=FALSE}
-  buffers <- dismo:::.generateCircles(XY, d=radius, lonlat=longlat)
+  buffers <- dismo::circles(XY, d=radius, lonlat=longlat, dissolve=FALSE)
   vegetation.base.raster[is.na(vegetation.base.raster)] <- 100
   
   
@@ -50,7 +50,7 @@ buffer.frags <- function(XY, radius, vegetation.base.raster, plot=TRUE) {
 		# temp.rast[is.na(temp.rast)] <- 100
 		# temp.rast[outer.cells] <- NA
 		# plot(temp.rast)
-		temp.rast <- mask(vegetation.base.raster, buffers[n])
+		temp.rast <- mask(vegetation.base.raster, buffers@polygons[n])
 		dat[[n]] <- ClassStat(temp.rast)
 		}
 		try(names(dat) <- row.names(XY))
