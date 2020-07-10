@@ -149,7 +149,7 @@ weighted.endemism <- function(species_records, records="single", site.coords, sp
 										if(nrow(as.data.frame(temp)) > 4) {
 											spp_i_range_polygon <- try(mcp(temp, percent=outlier_pct))
 											if(class(spp_i_range_polygon)[1] == "try-error") {
-												v[i] <- max(CalcDists(as.data..frame(temp)))
+												v[i] <- max(CalcDists(as.data.frame(temp)))
 											} #cls if(class(spp...
 											if(!class(spp_i_range_polygon)[1] == "try-error") {
 												v[i] <- max(CalcDists(as.data.frame(spp_i_range_polygon@polygons[[1]]@Polygons[[1]]@coords)))
