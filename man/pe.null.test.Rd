@@ -63,7 +63,7 @@ Raw phylogenetic diversity/endemism scores are biased both by the completeness o
 data(mite)
 data(mite.xy)
 #for example, generate phylogenetic tree of species with random relationships and branch lengths
-mite.tree <- rtree(n=ncol(mite), tip.label=colnames(mite)) 
+mite.tree <- ape::rtree(n=ncol(mite), tip.label=colnames(mite)) 
 mite.PE <- phylogenetic.endemism(mite, records="site", site.coords=mite.xy, 
 sep.comm.spp="none", phylo.tree=mite.tree, sep.phylo.spp="none", weight.type="cell")
 pe.mite.test <- pe.null.test(mite.PE)

@@ -81,7 +81,7 @@ Rosauer, D., Laffan, S. W., Crisp, M. D., Donnellan, S. C. & Cook, L. G. (2009) 
 data(mite)
 data(mite.xy)
 #for example, generate random phylogenetic tree of species in dataset
-mite.tree <- rtree(n=ncol(mite), tip.label=colnames(mite)) 
+mite.tree <- ape::rtree(n=ncol(mite), tip.label=colnames(mite)) 
 mite.PE <- phylogenetic.endemism(mite, records="site", site.coords=mite.xy, 
 sep.comm.spp="none", phylo.tree=mite.tree, sep.phylo.spp="none", weight.type="cell")
 mite.PE
