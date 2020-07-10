@@ -15,27 +15,7 @@ convert.sites.data(species_records, site.coords)
 }
 %- maybe also 'usage' for other objects documented here.
 \arguments{
-  \item{species_records}{A data.frame with rows as sites and columns as species. Values greater than 0 are interpret
-d as indicating presence (abundances are not retained).}
-%%     ~~Describe \code{x} here~~
- \item{site.coords}{A data.frame with the sites (/field plots) that match the column names of species_records as rows
-with longlat/XY coordinates.}
-}
-\details{This function is partially a reverse operation to simba::mama, which converts long-format (individual)
-species records into matrix format.
-%%  ~~ If necessary, more details than the description above ~~
-}
-\value{Returns a data.frame with three columns, "SPECIES", "LONGITUDE", "LATITUDE".
-}
-\description{This function converts species occurrence data from site- to individual species record-based. This conversion could be useful in any situation where individual species records are required, but was designed primarily to allow this data format as input to other biodiversity mapping functions, in which case this conversion makes plot-based data compatible with the format of herbarium or musem records, for example.
-%%  ~~ A concise (1-5 lines) description of what the function does. ~~
-}
-\usage{
-convert.sites.data(species_records, site.coords)
-}
-%- maybe also 'usage' for other objects documented here.
-\arguments{
-  \item{species_records}{A data.frame with rows as sites and columns as species. Values greater than 0 are interpret d as indicating presence (abundances are not retained).}
+  \item{species_records}{A data.frame with rows as sites and columns as species. Values greater than 0 are interpreted as indicating presence (abundances are not retained).}
 %%     ~~Describe \code{x} here~~
  \item{site.coords}{A data.frame with the sites (/field plots) that match the column names of species_records as rows with longlat/XY coordinates.}
 }
@@ -43,11 +23,9 @@ convert.sites.data(species_records, site.coords)
 %%  ~~ If necessary, more details than the description above ~~
 }
 \value{Returns a data.frame with three columns, "SPECIES", "LONGITUDE", "LATITUDE".
-%%  ~Describe the value returned
-%%  If it is a LIST, use
-%%  \item{comp1 }{Description of 'comp1'}
-%%  \item{comp2 }{Description of 'comp2'}
-%% ...
+}
+\description{This function converts species occurrence data from site- to individual species record-based. This conversion could be useful in any situation where individual species records are required, but was designed primarily to allow this data format as input to other biodiversity mapping functions, in which case this conversion makes plot-based data compatible with the format of herbarium or musem records, for example.
+%%  ~~ A concise (1-5 lines) description of what the function does. ~~
 }
 \references{Guerin, G.R., Ruokolainen, L. & Lowe, A.J. (2015) A georeferenced implementation of weighted endemism. Methods in Ecology and Evolution. DOI: 10.1111/2041-210X.12361
 %% ~put references to the literature/web site here ~
