@@ -2,8 +2,6 @@ endemism.null.test <- function(weighted.endemism.output, nrep = 100, outlier.ran
 
 {
 
-	require(raster)
-
 	if(class(weighted.endemism.output) != "list") {
 		stop("Input data must be a list")
 	}
