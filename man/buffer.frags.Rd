@@ -58,13 +58,13 @@ extent(eg.rast) <- c(0,10, 0, 10)
 res(eg.rast) <- c(0.5,0.5)
 eg.rast[] <- NA
 eg.rast[sample(c(1:ncell(eg.rast)), 100)] <- 1
-plot(eg.rast)
-eg.coords <- data.frame(Longitude=c(3, 7), Latitude=c(4, 8))
-row.names(eg.coords) <- c("SiteA", "SiteB")
+eg.coords <- data.frame(Longitude=c(3, 5, 7), Latitude=c(4, 6, 8))
+row.names(eg.coords) <- c("SiteA", "SiteB", "SiteC")
 eg.coords
-points(eg.coords, pch=20, cex=2)
-frags <- buffer.frags(eg.coords, radius=150000, vegetation.base.raster=eg.rast)
+frags <- suppressWarnings(buffer.frags(eg.coords, radius=150000, vegetation.base.raster=eg.rast))
 
-frags <- do.call(rbind, frags) #TO CONDENSE INTO SINGLE DATA.FRAME
-frags #NOTE:class =100 in 'frags' is the default for NAs in the input raster (i.e. no habitat/vegetation).
+#TO CONDENSE INTO SINGLE DATA.FRAME
+frags <- do.call(rbind, frags) 
+frags
+#NOTE:class = 100 in 'frags' is the default for NAs in the input raster (i.e. no habitat/vegetation).
 }
