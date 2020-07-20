@@ -1,4 +1,4 @@
-export(range.metrics)
+export(spp.range.metrics)
 export(weighted.endemism)
 export(phylogenetic.endemism)
 export(phylogenetic.diversity.sites)
