@@ -1,11 +1,11 @@
-\name{range.metrics}
-\alias{range.metrics}
+\name{spp.range.metrics}
+\alias{spp.range.metrics}
 \title{Species range metrics
 }
 \description{Calculates selected species range metrics, given a set of georeferenced locations.  Metrics include grid cell and point location based measures of Area of Occupancy and Extent of Occurrence.
 }
 \usage{
-range.metrics(species_records, species = "SPECIES", longitude = "LONGITUDE", 
+spp.range.metrics(species_records, species = "SPECIES", longitude = "LONGITUDE", 
 latitude = "LATITUDE", coord.type = "longlat", weight.type = "cell",
 geo.calc = "max.dist", outlier_pct = 100, verbose = TRUE, frame.raster,
 deg.resolution = c(0.25, 0.25), extent.vector, plot.out = TRUE)
@@ -54,12 +54,12 @@ Georeferenced distance and area range metrics can be calculated longlats (defaul
 \seealso{\code{\link{weighted.endemism}}
 \cr
 \cr
-\code{\link{letsR::lets.rangesize}}
+\code{\link[letsR]{lets.rangesize}}
 }
 \examples{
 library(vegan)
 data(mite)
 data(mite.xy)
 mite_records <- convert.site.data(mite, mite.xy)
-range.metrics(mite_records, coord.type="custom", weight.type="geo")
+spp.range.metrics(mite_records, coord.type="custom", weight.type="geo")
 }

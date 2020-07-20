@@ -1,4 +1,4 @@
-range.metrics <- function(species_records, species="SPECIES", longitude="LONGITUDE", latitude="LATITUDE", coord.type="longlat", weight.type="cell", geo.calc="max.dist", outlier_pct=100, verbose=TRUE, frame.raster, deg.resolution=c(0.25,0.25), extent.vector, plot.out=TRUE) {
+spp.range.metrics <- function(species_records, species="SPECIES", longitude="LONGITUDE", latitude="LATITUDE", coord.type="longlat", weight.type="cell", geo.calc="max.dist", outlier_pct=100, verbose=TRUE, frame.raster, deg.resolution=c(0.25,0.25), extent.vector, plot.out=TRUE) {
 
 	if(outlier_pct > 100 | outlier_pct < 1) {
 		stop("Outlier_pct should be a percentage")
