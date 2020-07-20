@@ -42,7 +42,7 @@ deg.resolution = c(0.25, 0.25), extent.vector)
 \author{Greg R. Guerin & Lasse Ruokolainen
 }
 
-\seealso{\code{\link{letsR::lets.presab}}
+\seealso{\code{\link[letsR]{lets.presab}}
 }
 \examples{
 #####Preparation for this example:

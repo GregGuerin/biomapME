@@ -35,7 +35,7 @@ Faith, D. P. (1992) Conservation evaluation and phylogenetic diversity. Biologic
 \seealso{\code{\link{phylogenetic.endemism}}
 \cr
 \cr
-\code{\link{picante::pd}}
+\code{\link[picante]{pd}}
 }
 \examples{
 library(vegan)
