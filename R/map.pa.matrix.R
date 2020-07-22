@@ -65,7 +65,7 @@ map.pa.matrix <- function(species_records, records="single", site.coords, specie
 			if(any(is.na(cell_occur_matrix_prep$cell))) {
 				cell_occur_matrix_prep <- cell_occur_matrix_prep[-which(is.na(cell_occur_matrix_prep$cell)),]
 			} #cls if(any(is.na))
-			cell_occur_matrix <- mama(cell_occur_matrix_prep)
+			cell_occur_matrix <- simba::mama(cell_occur_matrix_prep)
 
 
 		cat("Occurrence matrix generated with dimensions: ", dim(cell_occur_matrix), "\n")

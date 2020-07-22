@@ -91,7 +91,7 @@ phylogenetic.endemism <- function(species_records, records="single", site.coords
 			if(any(is.na(cell_occur_matrix_prep$cell))) {
 				cell_occur_matrix_prep <- cell_occur_matrix_prep[-which(is.na(cell_occur_matrix_prep$cell)),]
 			} #cls if(any(is.na))
-			cell_occur_matrix <- mama(cell_occur_matrix_prep)
+			cell_occur_matrix <- simba::mama(cell_occur_matrix_prep)
 			}#cls if own matrix missing
 
 
@@ -207,7 +207,7 @@ phylogenetic.endemism <- function(species_records, records="single", site.coords
 			if(any(is.na(cell_occur_matrix_prep$cell))) {
 				cell_occur_matrix_prep <- cell_occur_matrix_prep[-which(is.na(cell_occur_matrix_prep$cell)),]
 			} #cls if(any(is.na))
-			cell_occur_matrix <- mama(cell_occur_matrix_prep)
+			cell_occur_matrix <- simba::mama(cell_occur_matrix_prep)
 			}#cls if own matrix missing
 
 
