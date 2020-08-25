@@ -18,7 +18,7 @@ convert.site.data(species_records, site.coords)
 }
 \value{Returns a data.frame with three columns, "SPECIES", "LONGITUDE", "LATITUDE".
 }
-\references{Guerin, G.R., Ruokolainen, L. & Lowe, A.J. (2015) A georeferenced implementation of weighted endemism. Methods in Ecology and Evolution. DOI: 10.1111/2041-210X.12361
+\references{Guerin, G.R., Ruokolainen, L. & Lowe, A.J. (2015) A georeferenced implementation of weighted endemism. \emph{Methods in Ecology and Evolution} \strong{6}, 845-852.
 }
 \author{Greg R. Guerin & Lasse Ruokolainen
 }

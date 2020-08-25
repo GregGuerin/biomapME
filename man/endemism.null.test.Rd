@@ -21,7 +21,7 @@ endemism.null.test(weighted.endemism.output, nrep = 100, outlier.range = 1.5)
 
 2) Identifies and maps outliers (i.e. in terms of map grid cells that have higher or lower endemism) based on quantiles. As categorical: whether endemism score lies more than 1.5 (or other user-defined amount) times outside the interquartile range; as continuous: the factor of the interquartile by which observed values differ from the median / 50 percent quantile). Returns vectors of values plus raster maps.
 
-Raw weighted endemism scores are biased both by the completeness of species sampling and species richness itself. Correcting by dividing by the observed number of species ('corrected weighted endemism' of Crips et al. 2001) is a proposed correction, but the relationship between endemism scores and species richness is not linear under a null model (random species draws), as increasingly infrequent species are drawn as richness increases, thereby increasing CWE. While correcting endemism scores in a more sophisticaed way is possible, this function does not correct the scores per se, but compares them to a null distribution. This is achieved by making replicate random draws from the species pool based on the observed species richness (i.e. same number of species) and the actual species frequencies (more frequent species more likely to be drawn). The distribution of the resulting set of null endemsim scores is compared to observed endemism and subsequently grid cells can be mapped as higher or lower than expected (based on significance testing and comparison to null quantiles).
+Raw weighted endemism scores are biased both by the completeness of species sampling and species richness itself. Correcting by dividing by the observed number of species ('corrected weighted endemism' of Crisp et al. 2001) is a proposed correction, but the relationship between endemism scores and species richness is not linear under a null model (random species draws), as increasingly infrequent species are drawn as richness increases, thereby increasing CWE. While correcting endemism scores in a more sophisticaed way is possible, this function does not correct the scores per se, but compares them to a null distribution. This is achieved by making replicate random draws from the species pool based on the observed species richness (i.e. same number of species) and the actual species frequencies (more frequent species more likely to be drawn). The distribution of the resulting set of null endemsim scores is compared to observed endemism and subsequently grid cells can be mapped as higher or lower than expected (based on significance testing and comparison to null quantiles).
 %%  ~~ If necessary, more details than the description above ~~
 }
 \value{Returns a list with following elements. Plots of observed and expected endemism against species richness are generated, as are plots of the generated rasters.
@@ -35,7 +35,10 @@ Raw weighted endemism scores are biased both by the completeness of species samp
   \item{$P.above.raster }{Map of $P.above.}
   \item{$richness }{Simple observed species richness scores for cells.}
 }
-\references{Guerin, G.R., Ruokolainen, L. & Lowe, A.J. (2015) A georeferenced implementation of weighted endemism. Methods in Ecology and Evolution. DOI: 10.1111/2041-210X.12361
+\references{Crisp, M.D., Laffan, S., Linder, H.P. & Monro, A.N.N.A. (2001) Endemism in the Australian flora. \emph{Journal of Biogeography} \strong{28}, 183-198.\cr
+\cr
+Guerin, G.R., Ruokolainen, L. & Lowe, A.J. (2015) A georeferenced implementation of weighted endemism. \emph{Methods in Ecology and Evolution} \strong{6}, 845-852.
+
 }
 \author{Greg R. Guerin & Lasse Ruokolainen
 }

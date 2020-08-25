@@ -24,12 +24,12 @@ phylogenetic.diversity.sites(species_records, phylo.tree)
 }
 \value{Returns a vector of PD scores (list with $PD as the vector) for sites in the community matrix.
 }
-\references{Guerin, G.R. and Lowe, A.J. (2015) Mapping phylogenetic endemism in R using georeferenced branch extents. SoftwareX 3-4, 22-26.
+\references{Guerin, G.R. and Lowe, A.J. (2015) Mapping phylogenetic endemism in R using georeferenced branch extents. \emph{SoftwareX} \strong{3-4}, 22-26.
 \cr
 \cr
-Faith, D. P. (1992) Conservation evaluation and phylogenetic diversity. Biological conservation, 61, 1-10.
+Faith, D.P. (1992) Conservation evaluation and phylogenetic diversity. \emph{Biological Conservation} \strong{61}, 1-10.
 }
-\author{Greg .R. Guerin
+\author{Greg R. Guerin
 }
 
 \seealso{\code{\link{phylogenetic.endemism}}

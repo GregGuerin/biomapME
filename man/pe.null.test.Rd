@@ -1,47 +1,30 @@
 \name{pe.null.test}
 \alias{pe.null.test}
-%- Also NEED an '\alias' for EACH other topic documented here.
 \title{Phylogenetic endemism null test
-%%  ~~function to do ... ~~
 }
 \description{Taking the outputs from the \code{phylogenetic.endemism} function, tests whether observed phylogenetic diversity/endemism is higher than expected, using non-parametric methods.
-%%  ~~ A concise (1-5 lines) description of what the function does. ~~
 }
 \usage{
 pe.null.test(phylogenetic.endemism.output, nrep = 100, outlier.range = 1.5,
 pe.type = "weighted", phylo.tree)
 }
-%- maybe also 'usage' for other objects documented here.
 \arguments{
-  \item{phylogenetic.endemism.output}{The returned object from a phylogenetic.endemism run, a list of length 3 (for PD, pe.type="unweighted") or 7 (for PE: pe.type="weighted"): $PD (numeric vector of phylogenetic diversity/endemism scores for grid cells); $PD_raster (raster layer of PD/PE scores); $grid.matrix (species against cells occurrence matrix - row names match $PD names); $ranges (numeric vector of range weights for phylogenetic branches);  $phyloMatrix (branches against species matrix); $phylo.cell.matrix (branches against cells matrix); $edge.lengths (numeric vector of edge.length in phylo.tree).
-%%     ~~Describe \code{phylogenetic.endemism.output} here~~
+  \item{phylogenetic.endemism.output}{The returned object from a \code{\link{phylogenetic.endemism}} run, a list of length 3 (for PD, \code{pe.type="unweighted"}) or 7 (for PE: \code{pe.type="weighted"}): \code{$PD} (numeric vector of phylogenetic diversity/endemism scores for grid cells); \code{$PD_raster} (raster layer of PD/PE scores); \code{$grid.matrix} (species against cells occurrence matrix - row names match $PD names); \code{$ranges} (numeric vector of range weights for phylogenetic branches); \code{$phyloMatrix} (branches against species matrix); \code{$phylo.cell.matrix} (branches against cells matrix); \code{$edge.lengths} (numeric vector of edge.length in phylo.tree).
 }
   \item{nrep}{Desired number of replicates when generating a null distribution from a random draw of species. Default is 100 for speed (slow for large datasets), but at least 1000 is recommended to ensure smooth null distributions and useful p-values.
-#
-%%     ~~Describe \code{nrep} here~~
 }
   \item{outlier.range}{The multiplier of the interquartile range, outside of which scores are considered to be categorical outliers. Default is the typical value of 1.5.
-%%     ~~Describe \code{outlier.range} here~~
 }
   \item{pe.type}{Refers back to how phylogenetic.endemism was run; alternatively set to pe.type="unweighted" for phylogenetic diversity with edge length uweighted by range size if this was the original setting (in which case 'phylo.tree' must be supplied).
-%%     ~~Describe \code{pe.type} here~~
 }
-  \item{phylo.tree}{The phylogenetic tree that was used to run phylogenetic.endemism, only required for testing unweighted pd (pe.type="unweighted").
-%%     ~~Describe \code{phylo.tree} here~~
+  \item{phylo.tree}{The phylogenetic tree that was used to run \code{phylogenetic.endemism}, only required for testing unweighted pd (\code{pe.type="unweighted"}).
 }
 }
-\details{With the outputs from the 'phylogenetic.endemism' function, performs the following tests: <b>1)</b> non-parametric significance test as to whether observed phylogenetic diversity/endemism is higher or lower than expected, given species richness (and observed species frequencies); <b>2)</b> Identifies and maps outliers (i.e. in terms of map grid cells that have higher or lower PD/PE) based on quantiles. As categorical: whether score lies more than 1.5 (or other user-defined amount) times outside the interquartile range; as continuous: the factor of the interquartile by which observed values differ from the median / 50 percent quantile). Returns vectors of values plus raster maps.
+\details{With the outputs from the \code{phylogenetic.endemism} function, performs the following tests: \strong{1)} non-parametric significance test as to whether observed phylogenetic diversity/endemism is higher or lower than expected, given species richness (and observed species frequencies); \strong{2)} Identifies and maps outliers (i.e. in terms of map grid cells that have higher or lower PD/PE) based on quantiles. As categorical: whether score lies more than 1.5 (or other user-defined amount) times outside the interquartile range; as continuous: the factor of the interquartile by which observed values differ from the median / 50 percent quantile). Returns vectors of values plus raster maps.
 
 Raw phylogenetic diversity/endemism scores are biased both by the completeness of species sampling and species richness itself. This function does not correct the scores per se, but compares them to a null distribution. This is achieved by making replicate random draws from the species pool based on the observed species richness (i.e. same number of species) and the actual species frequencies (more frequent species more likely to be drawn). The distribution of the resulting set of null scores is compared to the observed scores and subsequently grid cells can be mapped as higher or lower than expected (based on significance testing and comparison to null quantiles).
-
-%%  ~~ If necessary, more details than the description above ~~
 }
 \value{Returns a list with following elements. Plots of observed and expected phylogenetic diversity/endemism against species richness are generated, as are plots of the generated rasters.
-%%  ~Describe the value returned
-%%  If it is a LIST, use
-%%  \item{comp1 }{Description of 'comp1'}
-%%  \item{comp2 }{Description of 'comp2'}
-%% ...
   \item{$Quantile.25 }{Vector of expected lower interquartile range for a given species richness.}
   \item{$Quantile.75 }{Vector of expected upper interquartile range for a given species richness.}
   \item{$out.above.below }{Numeric vector assigning outliers categorically, with -1 for lower outlier, 0 non-outlier, 1 for upper outlier, for each grid cell.}

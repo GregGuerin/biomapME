@@ -37,7 +37,7 @@ deg.resolution = c(0.25, 0.25), extent.vector)
   \item{$grid.matrix }{A binary data.frame of species occurrences against grid cell numbers that match those in $pa.raster.}
   \item{$pa.raster }{A \code{RasterLayer} object for which species presence/absence is scored in $grid.matrix.}
 }
-\references{Guerin, G.R., Ruokolainen, L. & Lowe, A.J. (2015) A georeferenced implementation of weighted endemism. Methods in Ecology and Evolution 6, 845-852. DOI: 10.1111/2041-210X.12361
+\references{Guerin, G.R., Ruokolainen, L. & Lowe, A.J. (2015) A georeferenced implementation of weighted endemism. \emph{Methods in Ecology and Evolution} \strong{6}, 845-852.
 }
 \author{Greg R. Guerin & Lasse Ruokolainen
 }
