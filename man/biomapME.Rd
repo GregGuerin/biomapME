@@ -31,7 +31,7 @@ At present, biomapME contains functions for calculating:\cr
 
 \code{\link{map.pa.matrix}} : Presence-absence matrices for species occurrences within map grid cells.
 
-\code{\link{pe.null.text}} : Non-parametric tests as to whether observed phylogenetic diversity/endemism is higher than expected.
+\code{\link{pe.null.test}} : Non-parametric tests as to whether observed phylogenetic diversity/endemism is higher than expected.
 
 \code{\link{phylogenetic.diversity.sites}} : Phylogenetic diversity for a set of sample sites.
 
