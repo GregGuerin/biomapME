@@ -4,7 +4,7 @@ R functions for generating gridded biodiversity maps from point (incidence) data
 
 ===========================================================
 ## Calling contributors!
-biomapME is open to contributions that add to the basic aim of biodiversity metrics and mapping for plot-based or presence-only species records. Feel free to get in touch or clone the repository, add content, and make a pull request with your changes or additional functions. Accepted contributions would need to be fully documented in accompanying help manual ('.Rd' files).
+biomapME is open to contributions that add to the basic aim of making biodiversity metrics and mapping for plot-based or presence-only species records available in the R environment. Feel free to get in touch or clone the repository, add content, and make a pull request with your changes or additional functions. Accepted contributions need to be fully documented in accompanying help manual ('.Rd' files). Significant contributions will be attributed via package co-authorship.
 
 ==========================================================
 
