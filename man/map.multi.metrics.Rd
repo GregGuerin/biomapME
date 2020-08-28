@@ -10,7 +10,7 @@ phylogenetic=FALSE, phylo.tree, frame.raster, deg.resolution=c(0.25,0.25),
 extent.vector, plot.raster=TRUE)
 }
 \arguments{
-  \item{species_records}{A data.frame of species occurrences in plots withrows as sites and columns as species.
+  \item{species_records}{A data.frame of species occurrences in plots with rows as sites and columns as species. Cannot make use of presence-only records.
 }
   \item{site.coords}{A data.frame with rows as sites (/field plots) (names match the row names of species_records) and their geographic coordinates: first column must be x/longitude, second column y/latitude.
 }
