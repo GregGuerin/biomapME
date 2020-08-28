@@ -92,7 +92,7 @@ results <- list()
     
 ###
   beta.multi.cell <- function(comm) {
-    try(BAT::beta.multi(comm))
+    try(BAT::beta.multi(comm), silent=TRUE)
   }
   ###
   beta_result <- lapply(multi_list, beta.multi.cell) #get beta metrics for each matrix
