@@ -83,6 +83,7 @@ data(mite.xy)
 mite.tree <- ape::rtree(n=ncol(mite), tip.label=colnames(mite))
 ####Usage of the function:
 my.multi <- map.multi.metrics(mite, mite.xy, phylogenetic=TRUE, phylo.tree=mite.tree, deg.resolution=c(1, 1), plot.raster=FALSE)
+my.multi
 plot(my.multi$phylogenetic_raster)
 
 
