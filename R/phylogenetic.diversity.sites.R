@@ -16,7 +16,7 @@ phylogenetic.diversity.sites <- function(species_records, phylo.tree)
 		#trim excess species in species_records that aren't in phylo.tree
 		species_records <- species_records[,which(colnames(species_records) %in% phylo.tree$tip.label)]
 		#trim excess tips in phylo.tree that aren't in species_records
-		phylo.tree <- drop.tip(phylo.tree, which(!(phylo.tree$tip.label %in% colnames(species_records))))
+		phylo.tree <- ape::drop.tip(phylo.tree, which(!(phylo.tree$tip.label %in% colnames(species_records))))
 
 
 
