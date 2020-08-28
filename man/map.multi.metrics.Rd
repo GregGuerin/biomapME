@@ -20,7 +20,7 @@ extent.vector, plot.raster=TRUE)
 }
   \item{phylogenetic}{Logical with default FALSE. Whether to calculate phylogenetic diversity for grid cells with estimates based on completeness of species sampling.
 }
-  \item{phylo.tree}{A phylogenetic tree of class 'phylo' containing species in the occurrence data. Must have branch lengths.
+  \item{phylo.tree}{A phylogenetic tree of class 'phylo' (with branch lengths) containing species in the occurrence data. Must be supplied of \code{phylogenetic=TRUE}.
 }
   \item{frame.raster}{Optional. An existing \code{rasterLayer} object. User can elect to supply a raster. If not specified, the function generates a raster based on default or specified extent and resolution. Alpha and beta metrics are calculated based on plots in \code{species_records} that fall within grid cells of the \code{frame.raster}. 
 }
@@ -58,7 +58,7 @@ Chao, A. (1987). Estimating the population size for capture-recapture data with 
 \author{Greg R. Guerin
 }
 
-\seealso{\code{\link{phylogenetic.diversity.sites}
+\seealso{\code{\link{phylogenetic.diversity.sites}}
 \cr
 \cr
 \code{\link{phylogenetic.endemism}}
@@ -70,6 +70,7 @@ Chao, A. (1987). Estimating the population size for capture-recapture data with 
 \code{\link[vegan]{specpool}}
 \cr\cr
 \code{\link[BAT]{beta.multi}}
+\cr
 }
 \examples{
 #####Preparation for this example:
