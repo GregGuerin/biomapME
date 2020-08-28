@@ -82,7 +82,9 @@ data(mite.xy)
 #generate random phylogenetic tree
 mite.tree <- ape::rtree(n=ncol(mite), tip.label=colnames(mite))
 ####Usage of the function:
-map.multi.metrics(mite, mite.xy, phylogenetic=TRUE, phylo.tree=mite.tree, deg.resolution=c(1, 1))
+my.multi <- map.multi.metrics(mite, mite.xy, phylogenetic=TRUE, phylo.tree=mite.tree, deg.resolution=c(1, 1), plot.raster=FALSE)
+plot(my.multi$phylogenetic_raster)
+
 
 ####Example with custom grouping instead of by map grid cells
 #generate some random groupings for sites:
