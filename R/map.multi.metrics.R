@@ -1,7 +1,27 @@
-map.multi.metrics <- function(species_records, site.coords, alpha=TRUE, beta=TRUE, frame.raster, deg.resolution=c(0.25,0.25), extent.vector, plot.raster=TRUE) {
+map.multi.metrics <- function(species_records, site.coords, alpha=TRUE, beta=TRUE, phylogenetic=FALSE, phylo.tree, frame.raster, deg.resolution=c(0.25,0.25), extent.vector, plot.raster=TRUE) {
   
+  
+  #checks
   if(class(species_records) != "data.frame") {
     stop("Species data must be in a data.frame")
+  }
+  
+  if(class(site.coords) != "data.frame") {
+    stop("Species data must be in a data.frame")
+  }
+  
+  if(any(!is.logical(c(alpha, beta, phylogenetic, plot.raster)))) {
+    stop("Arguments alpha, beta, phylogenetic and plot.raster must be TRUE or FALSE")
+  }
+  
+  if(!alpha & phylogenetic) {
+    stop("Phylogenetic diversity estimation relies on alpha diversity. Set alpha = TRUE to calculate PD")
+  }
+  
+  if(!missing(frame.raster)) {
+    if(class(frame.raster != "RasterLayer")) {
+      stop("frame.raster must be a RasterLayer object")
+    }
   }
   
   if(missing(frame.raster)) {
@@ -33,9 +53,6 @@ map.multi.metrics <- function(species_records, site.coords, alpha=TRUE, beta=TRU
   }
   ###
   beta_result <- lapply(multi_list, beta.multi.cell) #get beta metrics for each matrix
-  
-  
-
   
 
   total_mean <- lapply(beta_result, function(x) return(x[1])) #extract first value from each table in the list (it is a list too) - equals total beta mean
@@ -69,6 +86,53 @@ frame.raster[as.numeric(rownames(beta_result))] <- beta_result$Btotal #add worke
 
   
 ##############################################
+  if(phylogenetic) {
+    
+    if(missing(phylo.tree)) {
+      stop("You must provide a phylo.tree if phylogenetic = TRUE")
+    }
+      
+      if(class(phylo.tree) != "phylo") {
+      stop("Phylogenetic tree must be in 'phylo' format")
+    }
+    
+    cat("Checking that occurrence matrix and phylo match." , "\n")
+    #trim excess species in species_records that aren't in phylo.tree
+    species_records <- species_records[,which(colnames(species_records) %in% phylo.tree$tip.label)]
+    #trim excess tips in phylo.tree that aren't in species_records
+    phylo.tree <- ape::drop.tip(phylo.tree, which(!(phylo.tree$tip.label %in% colnames(species_records))))
+    
+    if(!exists("multi_list")) {
+      multi_list <- split(species_records, site.coords$cell) #list of occurrence matrices split by shared grid cells
+    }
+    
+    
+      cat("Calculating phylogenetic diversity", "\n")
+    
+    PDmatFunc <- function(x, phylo.treeee=phylo.tree) {
+      x <- x[x > 0]
+      sub <- ape::drop.tip(phylo.treeee, which(!(phylo.treeee$tip.label %in% names(x))))
+      return(sum(sub$edge.length))
+    }
+    
+    
+    PDobs <- unlist(lapply(lapply(multi_list, colSums), PDmatFunc))
+    c <- alpha_result$Species / alpha_result$chao #vector of sample completeness index
+    PDest <- PDobs / c
+    
+    phylogenetic_result <- data.frame(PDobs=PDobs, completeness=c, PDest=PDest)
+    rownames(phylogenetic_result) <- names(PDobs)
+    
+    frame.raster[] <- NA
+    frame.raster[as.numeric(rownames(phylogenetic_result))] <- phylogenetic_result$PDest
+    
+    results$phylogenetic_result <- phylogenetic_result
+    results$phylogenetic_raster <- frame.raster
+    
+  } #end if phylogenetic
+  
+  
+#############################################
  return(results)
   
 }
