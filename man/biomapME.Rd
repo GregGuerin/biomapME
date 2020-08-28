@@ -27,7 +27,7 @@ At present, biomapME contains functions for calculating:\cr
 
 \code{\link{endemism.null.test}} : Non-parametric tests as to whether observed endemism is higher than expected.
 
-\code{\link{map.multi.metrics}} : Nonparametric estimators of species richness such as chao and bootstrap for map grid cellsbased on sets of presence/absence plots in cells. Multi-site beta diversity calculated on the basis of sets of presence/absence plots within map grid cells.
+\code{\link{map.multi.metrics}} : Metrics based on sets of multiple presence/absence plots within map grid cells: 1. Nonparametric estimators of species richness. 2. Multi-site beta diversity. 3. Estimated phylogenetic diversity based on completeness of species sampling. 
 
 \code{\link{map.pa.matrix}} : Presence-absence matrices for species occurrences within map grid cells.
 
