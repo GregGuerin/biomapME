@@ -20,7 +20,8 @@ Imports:
     sp, 
     grDevices, 
     stats,
-    BAT
+    BAT,
+    PhyloMeasures
 Description: R functions for generating gridded biodiversity maps from point (incidence) data.
 License: GPL-3 + file LICENSE
 LazyData: TRUE
