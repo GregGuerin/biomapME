@@ -18,7 +18,7 @@ The main purpose of the package is to provide R functionality for taking simple 
 biomapME contains functions for calculating species richness, phylogenetic diversity, 'weighted endemism' (and its various guises including phylogenetic endemism and georeferenced range span/area implementations), with non-parametric tests for higher diversity than expected by chance. Supporting functions include calculation of various range metrics (batch-processed for multiple species and includes number of occupied grid cells, extent of occurrence (range span, range area), and longitudinal/latitudinal range), generation of species presence-absence matrices for species within map grid cells, conversion of plot based species occurrence matrices into individual species records, and batch-processed habitat fragmentation/class statistics for circular buffers around focal sites (useful for testing landscape influence on site-based metrics, for example).
 
 
-The current version of biomapME imports functions from the packages raster (a dependency), geosphere, simba, SDMTools, ape, pracma, maps, vegan, adehabitatHR, dismo, sp, grDevices, stats, and can be installed and accessed as follows:
+The current version of biomapME imports functions from the packages raster (a dependency), geosphere, simba, SDMTools, ape, pracma, maps, vegan, adehabitatHR, dismo, sp, BAT and PhyloMeasures and can be installed and accessed as follows:
 ```
 library(devtools)
 install_github("GregGuerin/biomapME")
@@ -29,7 +29,7 @@ help(biomapME)
 
 biomapME v2.0 can be cited as:
 ```
-Guerin, G.R. (2020) biomap: Biodiversity Mapping and Macroecology. R package v2.0. https://github.com/GregGuerin/biomapME
+Guerin, G.R. (2020) biomapME: Biodiversity Mapping and Macroecology. R package v2.0. https://github.com/GregGuerin/biomapME
 ```
 
 
