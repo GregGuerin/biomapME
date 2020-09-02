@@ -30,6 +30,9 @@ Faith, D.P. (1992) Conservation evaluation and phylogenetic diversity. \emph{Bio
 \cr
 \cr
 \code{\link[picante]{pd}}
+\cr
+\cr
+\code{\link[PhyloMeasures]{pd.query}}
 }
 \examples{
 library(vegan)
