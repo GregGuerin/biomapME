@@ -1,4 +1,4 @@
-phylogenetic.endemism <- function(species_records, records="single", site.coords, species="SPECIES", longitude="LONGITUDE", latitude="LATITUDE", sep.comm.spp = " ", phylo.tree, sep.phylo.spp = "_", frame.raster, deg.resolution=c(0.25,0.25), extent.vector, pe.type="weighted", plot.raster=TRUE, weight.type="cell", outlier_pct=95, own.weights, own.grid.matrix, own.phylo.cell.matrix, own.phyloMatrix)
+phylogenetic.endemism <- function(species_records, records="single", site.coords, species="SPECIES", longitude="LONGITUDE", latitude="LATITUDE", sep.comm.spp = " ", phylo.tree, sep.phylo.spp = "_", frame.raster, deg.resolution=c(0.25,0.25), extent.vector, pe.type="weighted", plot.raster=TRUE, weight.type="cell", outlier_pct=95, own.weights, own.grid.matrix, own.phylo.cell.matrix, own.phyloMatrix, pd.standard=FALSE)
 {
 
 
@@ -115,6 +115,8 @@ phylogenetic.endemism <- function(species_records, records="single", site.coords
 
 		cat("Calculating phylogenetic diversity", "\n")
 
+		if(!pd.standard) {
+		  
 		PDmatFunc <- function(x, phylo.tree) {
 			x <- x[,which(x>0)]
 			drops <- setdiff(phylo.tree$tip.label, colnames(x))
@@ -131,8 +133,16 @@ phylogenetic.endemism <- function(species_records, records="single", site.coords
 		names(PD) <- row.names(cell_occur_matrix)
 		PD <- PD[!is.na(PD)]
 
+		} #end if pd.standard=F
 
-
+		
+		if(pd.standard) {
+		  cat("Standardising phylogenetic diversity by species richness", "\n")
+		  PD <- PhyloMeasures::pd.query(tree=phylo.tree, matrix=cell_occur_matrix, standardize=TRUE)
+		  names(PD) <- row.names(cell_occur_matrix)
+		  PD <- PD[!is.na(PD)]
+		} #end if pd.standard=T
+		
 		phyloDraster <- frame.raster
 		phyloDraster[] <-  NA
 		phyloDraster[as.numeric(as.character(names(PD)))] <- PD
