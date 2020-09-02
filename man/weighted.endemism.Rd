@@ -32,7 +32,7 @@ geo.calc = "max.dist", outlier_pct = 100, verbose = TRUE, own.grid.matrix)
 }
   \item{extent.vector}{Arguments specifying the map extent in degrees the user wishes the calculations and mapping to use. If no frame is specified, an arbitrary extent is supplied, that of the input point data. If a frame.raster is specified, these arguments are ignored (function bases mapping on the supplied raster)
 }
-  \item{type}{Either "weighted" (default), or "corrected" (corrected weighted endemism - the 'per-species' weighted endemism as per Crisp et al. (2001). This is provided for convenience, but is not particularly recommended - insterad, use the outputs of weighted.endemism in endemism.null.test function to compare to null expectations of endemism given the species richness)
+  \item{type}{Either "weighted" (default), or "corrected" (corrected weighted endemism - the 'per-species' weighted endemism as per Crisp et al. (2001). This is provided for convenience, but is not particularly recommended - instead, use the outputs of weighted.endemism in endemism.null.test function to compare to null expectations of endemism given the species richness)
 }
   \item{plot.raster}{Whether or not to plot the output raster with endemism scores. Either way, the raster object is stored in the output.
 }
@@ -70,10 +70,28 @@ geo.calc = "max.dist", outlier_pct = 100, verbose = TRUE, own.grid.matrix)
 library(vegan)
 data(mite)
 data(mite.xy)
+
+#default, range rarity richness
 endemism_mydata <- weighted.endemism(mite, site.coords = mite.xy, records="site")
+endemism_mydata$WE
+endemism_mydata$weights
+
+#georeferenced weighted endemism; re-apply previous outputs
 endemism_mydata2 <- weighted.endemism(mite, site.coords = mite.xy, records="site", 
 weight.type="geo", own.grid.matrix = endemism_mydata$grid.matrix, 
 frame.raster=endemism_mydata$WE_raster)
+endemism_mydata$WE
+endemism_mydata$weights
+
+
+#re-apply weights from previous run
 endemism_mydata3 <- weighted.endemism(mite, site.coords = mite.xy, records="site", 
 own.weights = endemism_mydata2$weights)
+
+
+#unweighted species richness
+endemism_mydata <- weighted.endemism(mite, site.coords = mite.xy, 
+records="site", weight.type="richness")
+endemism_mydata$WE
+endemism_mydata$weights
 }
