@@ -1,6 +1,6 @@
 \name{phylogenetic.endemism}
 \alias{phylogenetic.endemism}
-\title{Phylogenetic range rarity & georeferenced phylogenetic endemism
+\title{Phylogenetic diversity, phylogenetic range rarity & georeferenced phylogenetic endemism
 }
 \description{Calculates phylogenetic endemism (Faith's phylogenetic diversity inversely weighted by the spatial range of particular branch lengths) or alternatively (unweighted) phylogenetic diversity across gridded maps using individual or site-based point records.
 }
@@ -10,7 +10,7 @@ species = "SPECIES", longitude = "LONGITUDE", latitude = "LATITUDE",
 sep.comm.spp = " ", phylo.tree, sep.phylo.spp = "_", frame.raster,
 deg.resolution = c(0.25, 0.25), extent.vector, pe.type = "weighted",
 plot.raster = TRUE, weight.type = "cell", outlier_pct = 95, own.weights,
-own.grid.matrix, own.phylo.cell.matrix, own.phyloMatrix)
+own.grid.matrix, own.phylo.cell.matrix, own.phyloMatrix, pd.standard = FALSE)
 }
 \arguments{
   \item{species_records}{A data.frame, either with: a) rows as individual species records, and columns that include fields for species name, longitude and latitude (see 'species', 'longitude', 'latitude' below); or b) rows as sites and columns as species, in which case 'site.coords' (below) must also be supplied.
@@ -39,7 +39,7 @@ own.grid.matrix, own.phylo.cell.matrix, own.phyloMatrix)
 }
   \item{pe.type}{Either "weighted" (default; = phylogenetic endemism), or "unweighted" (= phylogenetic diversity).
 }
-  \item{plot.raster}{Whether or not to plot the output raster of endemism scores. Whether plotted or not, a raster object is stored in the returned output.
+  \item{plot.raster}{Logical. Whether or not to plot the output raster of endemism scores. Whether plotted or not, a raster object is stored in the returned output.
 }
   \item{weight.type}{Range wieght type for calculation of phylogenetic endemism. Default is "cell" (grid cell-based range weights:: phylogenetic range rarity), while "geo" will calculate georeferenced range 'span' weights (georeferenced phylogenetic endemism). Argument is ignored if \code{pe.type="unweighted"} or if \code{own.weights} are provided.
 }
@@ -53,37 +53,62 @@ own.grid.matrix, own.phylo.cell.matrix, own.phyloMatrix)
 }
   \item{own.phyloMatrix}{If user provides the above \code{own.phylo.cell.matrix} in a repeat run of the function, this must also be supplied, as the function still defaults to returning 'phylo.matrix' even though the function now skips its generation. e.g. \code{$phyloMatrix} of an previous phylogenetic.endemism.R run).
 }
+  \item{pd.standard}{Logical with default FALSE. Applies only to the calculation of unweighted phylogenetic diversity (i.e., \code{pe.type="unweighted"}). If set to TRUE, PD is standardised by species richness. See Details.
 }
-\details{This implementation of phylogenetic endemism allows alternative calculation of weights for branch length ranges. Weights can be calculated based on the frequency of occurrence in grid cells, or alternatively by the georeferenced span of the range. Unweighted phylogenetic diversity can also be selected.
 }
+\details{This implementation of phylogenetic endemism for incidence data within map grid cells allows alternative calculation of weights for branch length geographic ranges. Weights can be calculated based on the frequency of occurrence in grid cells, or alternatively by the georeferenced span of the range.
+
+Unweighted phylogenetic diversity can also be selected. In this case, if \code{pd.standard = TRUE}, the function becomes a rasterised wrapper for the \code{\link[PhyloMeasures]{pd.query}} function in package PhyloMeasures, which uses a null model to standardise PD for species richness (given PD is additive by species) by subtracting the mean and dividing by the standard deviation of expected PD. 
+}
+
 \value{Returns a list of length 3 (for \code{pe.type="unweighted"} i.e. phylogenetic diversity/PD) or length 7 (for \code{pe.type="weighted"} i.e. phylogenetic endemism/PE). For both PD and PE:
   \item{$PD }{Vector of phylogenetic diversity/endemism scores. }
   \item{$PD_raster }{Raster map with phylogenetic diversity/endemism scores.}
     \item{$grid.matrix }{A binary data.frame of species against grid cell numbers used in the function which is returned so that it can be re-used to save computation time, and because it is required in the downstream pe.null.test.R function to calculated species sample probabilities. Note that this only includes species that are found in the phylo.tree.}
-    \item{$PD }{Vector of phylogenetic diversity/endemism scores. }
 For PE only:
   \item{$ranges }{A named numeric vector of weights used to calculate endemism (equivalent to range size in metres if \code{weight.type="geo"}, range size in cells if weight.type="cell" (default), or the user supplied weights if own.weights was supplied) (skipped if \code{pe.type="unweighted"}). }
   \item{$phyloMatrix }{A binary matrix representation of the phylo.tree, returned mainly for convenience for downstream use (skipped if \code{pe.type="unweighted"}). }
   \item{$phylo.cell.matrix }{A binary matrix recording the presence of particular phylogenetic branches in map grid cells used in the function, which is returned for re-use in subsequent runs for efficiency (e.g. with different weights), (skipped if pe.type="unweighted"). }
   \item{$edge.lengths }{A numeric vector of edge lengths from the phylo.tree }
 }
-\references{Guerin, G.R. & Lowe, A.J. (2015) Mapping phylogenetic endemism in R using georeferenced branch extents. \emph{SoftwareX} \strong{3-4}, 22-26.
+\references{Faith, D.P. (1992) Conservation evaluation and phylogenetic diversity. \emph{Biological Conservation} \strong{61}, 1-10.
+\cr
+\cr
+Guerin, G.R. & Lowe, A.J. (2015) Mapping phylogenetic endemism in R using georeferenced branch extents. \emph{SoftwareX} \strong{3-4}, 22-26.
 \cr
 \cr
 Rosauer, D., Laffan, S.W., Crisp, M.D., Donnellan, S.C. & Cook, L.G. (2009) Phylogenetic endemism: a new approach for identifying geographical concentrations of evolutionary history. \emph{Molecular Ecology} \strong{18}, 4061-4072.
+\cr
+\cr
+Tsirogiannis, C. & B. Sandel. (2016) PhyloMeasures: A package for computing phylogenetic biodiversity measures and their statistical moments. \emph{Ecography} \strong{39}, 709-714,
 }
 \author{Greg R. Guerin
 }
 
 \seealso{\code{\link{pe.null.test}}
+\cr
+\cr
+\code{\link{phylogenetic.diversity.sites}}
+\cr
+\cr
+\code{\link{map.multi.metrics}}
 }
 \examples{
 library(vegan)
 data(mite)
 data(mite.xy)
-#for example, generate random phylogenetic tree of species in dataset
+
+#generate random phylogenetic tree of species in dataset
 mite.tree <- ape::rtree(n=ncol(mite), tip.label=colnames(mite)) 
+
+#calculate phylogenetic range rarity
 mite.PE <- phylogenetic.endemism(mite, records="site", site.coords=mite.xy, 
 sep.comm.spp="none", phylo.tree=mite.tree, sep.phylo.spp="none", weight.type="cell")
-mite.PE
+mite.PE$PD
+
+#calculate richness-standardised phylogenetic diversity
+mite.PD <- phylogenetic.endemism(mite, records="site", site.coords=mite.xy, 
+sep.comm.spp="none", phylo.tree=mite.tree, sep.phylo.spp="none", 
+pe.type="unweighted", pd.standard=TRUE)
+mite.PD$PD
 }
