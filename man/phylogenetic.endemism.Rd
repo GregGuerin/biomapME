@@ -9,7 +9,7 @@ phylogenetic.endemism(species_records, records = "single", site.coords,
 species = "SPECIES", longitude = "LONGITUDE", latitude = "LATITUDE",
 sep.comm.spp = " ", phylo.tree, sep.phylo.spp = "_", frame.raster,
 deg.resolution = c(0.25, 0.25), extent.vector, pe.type = "weighted",
-plot.raster = TRUE, weight.type = "cell", outlier_pct = 95, own.weights,
+plot.raster = TRUE, weight.type = "cell", outlier_pct = 100, own.weights,
 own.grid.matrix, own.phylo.cell.matrix, own.phyloMatrix, pd.standard = FALSE)
 }
 \arguments{
