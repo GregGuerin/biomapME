@@ -229,10 +229,12 @@ spp.range.metrics <- function(species_records, species="SPECIES", longitude="LON
 		      
 		      if(geo.calc == "LONG") {
 		        v[n] <- max(temp$LONGITUDE)-min(temp$LONGITUDE)
+		        if(v[n] == 0) {v[n] <- 1}
 		      } #cls if(geo.calc =="LONG")...
 		      
 		      if(geo.calc == "LAT") {
 		        v[n] <- max(temp$LATITUDE)-min(temp$LATITUDE)
+		        if(v[n] == 0) {v[n] <- 1}
 		      } #cls if(geo.calc =="LONG")...
 		      
 		      
