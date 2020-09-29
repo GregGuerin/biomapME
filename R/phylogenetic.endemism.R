@@ -77,7 +77,7 @@ phylogenetic.endemism <- function(species_records, records="single", site.coords
 			if(sep.comm.spp != "none") {
 				cat("Re-formatting species names", "\n") #this is to ensure mama() does not replace spaces with dots between genus/species
 				removethis <- strsplit(as.character(species_records$SPECIES), sep.comm.spp, fixed=TRUE)
-				removethis <- unlist(lapply(removethis, function(x) paste(x[1], x[2], sep="_", fixed=TRUE)))
+				removethis <- unlist(lapply(removethis, function(x) paste(x[1], x[2], sep=sep.phylo.spp)))
 				species_records$SPECIES <- factor(removethis)
 			} #close if(sep.comm.spp...
 
