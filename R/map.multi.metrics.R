@@ -39,7 +39,7 @@ map.multi.metrics <- function(species_records, site.coords, alpha=TRUE, beta=TRU
   }
   
   if(!missing(frame.raster)) {
-    if(class(frame.raster != "RasterLayer")) {
+    if(class(frame.raster) != "RasterLayer") {
       stop("frame.raster must be a RasterLayer object")
     }
   }
