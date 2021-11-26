@@ -1,12 +1,14 @@
 Package: biomapME
 Type: Package
 Title: Biodiversity Mapping and Macroecology
-Version: 2.0
-Date: 2020-06-24
+Version: 2.1
+Date: 2021-11-26
 Author: Greg R. Guerin
 Maintainer: Greg Guerin <ggueri01@gmail.com>
-Depends: R (>= 3.1.0), raster
+Depends: R (>= 3.1.0),
+         raster
 Suggests:
+    vegan
 Imports:
     geosphere, 
     simba, 
