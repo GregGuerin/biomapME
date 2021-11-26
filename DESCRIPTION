@@ -8,6 +8,7 @@ Maintainer: Greg Guerin <ggueri01@gmail.com>
 Depends: R (>= 3.1.0),
          raster
 Suggests:
+    letsR
 Imports:
     geosphere, 
     simba, 
