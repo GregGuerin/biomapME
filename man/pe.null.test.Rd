@@ -6,7 +6,7 @@
 }
 \usage{
 pe.null.test(phylogenetic.endemism.output, nrep = 100, outlier.range = 1.5,
-pe.type = "weighted", phylo.tree)
+pe.type = "weighted", phylo.tree, plot.all=TRUE)
 }
 \arguments{
   \item{phylogenetic.endemism.output}{The returned object from a \code{\link{phylogenetic.endemism}} run, a list of length 3 (for PD, \code{pe.type="unweighted"}) or 7 (for PE: \code{pe.type="weighted"}): \code{$PD} (numeric vector of phylogenetic diversity/endemism scores for grid cells); \code{$PD_raster} (raster layer of PD/PE scores); \code{$grid.matrix} (species against cells occurrence matrix - row names match $PD names); \code{$ranges} (numeric vector of range weights for phylogenetic branches); \code{$phyloMatrix} (branches against species matrix); \code{$phylo.cell.matrix} (branches against cells matrix); \code{$edge.lengths} (numeric vector of edge.length in phylo.tree).
@@ -18,6 +18,8 @@ pe.type = "weighted", phylo.tree)
   \item{pe.type}{Refers back to how phylogenetic.endemism was run; alternatively set to pe.type="unweighted" for phylogenetic diversity with edge length uweighted by range size if this was the original setting (in which case 'phylo.tree' must be supplied).
 }
   \item{phylo.tree}{The phylogenetic tree that was used to run \code{phylogenetic.endemism}, only required for testing unweighted pd (\code{pe.type="unweighted"}).
+}
+\item{plot.all}{Logical with default TRUE. Whether or not to plot additional plots  in new device windows including IQR scatterplot and output rasters. If FALSE, a single scatterplot is generated showing observed versus expected (NULL) values.
 }
 }
 \details{With the outputs from the \code{phylogenetic.endemism} function, performs the following tests: \strong{1)} non-parametric significance test as to whether observed phylogenetic diversity/endemism is higher or lower than expected, given species richness (and observed species frequencies); \strong{2)} Identifies and maps outliers (i.e. in terms of map grid cells that have higher or lower PD/PE) based on quantiles. As categorical: whether score lies more than 1.5 (or other user-defined amount) times outside the interquartile range; as continuous: the factor of the interquartile by which observed values differ from the median / 50 percent quantile). Returns vectors of values plus raster maps.
