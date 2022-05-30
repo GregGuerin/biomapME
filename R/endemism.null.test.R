@@ -1,4 +1,4 @@
-endemism.null.test <- function(weighted.endemism.output, nrep = 100, outlier.range = 1.5)
+endemism.null.test <- function(weighted.endemism.output, nrep = 100, outlier.range = 1.5, plot.all=TRUE)
 
 {
 
@@ -37,17 +37,22 @@ endemism.null.test <- function(weighted.endemism.output, nrep = 100, outlier.ran
 		Quantile.25[[n]] <- quantile(rand.endemism[[n]])[2]
 		Quantile.50[[n]] <- quantile(rand.endemism[[n]])[3]
 	}
+	points(richness, weighted.endemism.output$WE, pch=20, cex=0.6)
+	
 	names(rand.endemism) <- sort(unique(richness))
 	names(Quantile.75) <- sort(unique(richness))
 	names(Quantile.25) <- sort(unique(richness))
 	names(Quantile.50) <- sort(unique(richness))
 
-	dev.new()
-	plot(weighted.endemism.output$WE ~ richness, pch=20, cex=0.1, main = "Endemism against species richness (black = observed, red = null IQR)")
-	points(sort(unique(richness)), Quantile.75, type="l", lwd=2, col="red")
-	points(sort(unique(richness)), Quantile.25, type="l", lwd=2, col="red")
-
-
+	if(plot.all) {
+	  dev.new()
+	  plot(weighted.endemism.output$WE ~ richness, pch=20, cex=0.5, main = "Endemism against species richness (black = observed, blue = null IQR)")
+	  points(sort(unique(richness)), Quantile.75, type="l", lwd=1, col="blue")
+	  points(sort(unique(richness)), Quantile.25, type="l", lwd=1, col="blue")
+	  polygon(c(sort(unique(richness)), rev(sort(unique(richness)))), c(Quantile.25, rev(Quantile.75)), col="lightcyan", lty = 0)
+	  points(richness, weighted.endemism.output$WE, pch=20, cex=0.5)
+	}
+	
 	#####OUTLIERS - categorical and continuous
 	cat("Calculating outliers", "\n")
 	out.above.below <- weighted.endemism.output$WE
@@ -78,17 +83,20 @@ endemism.null.test <- function(weighted.endemism.output, nrep = 100, outlier.ran
 	out.above.below.raster[] <- NA
 	out.above.below.raster[as.numeric(names(out.above.below))] <- out.above.below
 
-	out.breaks <- c(-1.5, -0.5, 0.5, 1.5)
-	dev.new()
-	plot(out.above.below.raster, breaks=out.breaks, col=heat.colors(3), main = "Outliers - categorical")
-
+	if(plot.all) {
+	  out.breaks <- c(-1.5, -0.5, 0.5, 1.5)
+	  dev.new()
+	  plot(out.above.below.raster, breaks=out.breaks, col=heat.colors(3), main = "Outliers - categorical")
+	}
+	
 	out.continuous.raster <- weighted.endemism.output$WE_raster
 	out.continuous.raster[] <- NA
 	out.continuous.raster[as.numeric(names(out.continuous))] <- out.continuous
 
-	dev.new()
-	plot(out.continuous.raster, main = "Outliers - continuous")
-
+	if(plot.all) {
+	  dev.new()
+	  plot(out.continuous.raster, main = "Outliers - continuous")
+	}
 
 	####SIGNIFICANCE
 	cat("Calculating significance", "\n")
@@ -106,10 +114,11 @@ endemism.null.test <- function(weighted.endemism.output, nrep = 100, outlier.ran
 	P.above.raster[] <- NA
 	P.above.raster[as.numeric(names(P.above))] <- P.above
 
-	p.breaks <- c(0, 0.0001, 0.001, 0.01, 0.025, 0.975, 0.99, 0.999, 0.9999, 1)
-	dev.new()
-	plot(P.above.raster, breaks=p.breaks, col=topo.colors(9), main = "Outliers - significance (e.g. higher than expected <0.025; lower >0.975")
-
+	if(plot.all) {
+	  p.breaks <- c(0, 0.0001, 0.001, 0.01, 0.025, 0.975, 0.99, 0.999, 0.9999, 1)
+	  dev.new()
+	  plot(P.above.raster, breaks=p.breaks, col=topo.colors(9), main = "Outliers - significance (e.g. higher than expected <0.025; lower >0.975")
+	}
 
 	cat("Collating outputs", "\n")
 	outputs <- list(Quantile.25 = Quantile.25, Quantile.75 = Quantile.75, out.above.below = out.above.below, out.above.below.raster = out.above.below.raster, out.continuous = out.continuous, out.continuous.raster = out.continuous.raster, P.above = P.above, P.above.raster = P.above.raster, richness = richness)
