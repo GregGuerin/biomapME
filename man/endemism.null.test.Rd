@@ -5,7 +5,8 @@
 \description{Taking the outputs from the 'weighted.endemism' function, tests whether observed endemism is higher than expected, using non-parametric methods.
 }
 \usage{
-endemism.null.test(weighted.endemism.output, nrep = 100, outlier.range = 1.5)
+endemism.null.test(weighted.endemism.output, nrep = 100, outlier.range = 1.5,
+plot.all=TRUE)
 }
 \arguments{
   \item{weighted.endemism.output}{The returned object from a 'weighted.endemism' run (or equivalent constructed separately). Consists of a list of length 4: $WE (named vector of endemism scores for grid cells), $WE_raster (raster layer of endemism scores), $weights (named vector of range weights for species used in the calculation of weighted endemism); $grid.matrix (species against cells occurrence matrix - row names must match $WE names, column names must match $weights names). If 'corrected weighted endemsim' was specified in the weighted.endemism run, this function will not accept the output. This is because correcting via dividing endemism by species richness is an alternative to this function, which uses more sophisticated methods for testing whether endemism is different than that expected for a given species richness.
@@ -13,6 +14,8 @@ endemism.null.test(weighted.endemism.output, nrep = 100, outlier.range = 1.5)
   \item{nrep}{The desired number of replicates when generating a null distribution from a random draw of species. Default is 100 for speed, but at least 1000 is recommended to ensure smooth null distributions and useful p-values.
 }
   \item{outlier.range}{Times outside the (null) interquartile range beyond which a record is considered an outlier.
+}
+\item{plot.all}{Logical with default TRUE. Whether or not to plot additional plots  in new device windows including IQR scatterplot and output rasters. If FALSE, a single scatterplot is generated showing observed versus expected (NULL) values.
 }
 }
 \details{With the outputs from the 'weighted.endemism' function, performs the following tests:

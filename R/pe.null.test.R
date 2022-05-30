@@ -1,4 +1,4 @@
-pe.null.test <- function(phylogenetic.endemism.output, nrep = 100, outlier.range = 1.5, pe.type="weighted", phylo.tree)
+pe.null.test <- function(phylogenetic.endemism.output, nrep = 100, outlier.range = 1.5, pe.type="weighted", phylo.tree, plot.all=TRUE)
   {
 
 	if(class(phylogenetic.endemism.output) != "list") {
@@ -30,7 +30,7 @@ pe.null.test <- function(phylogenetic.endemism.output, nrep = 100, outlier.range
 	probs <- colSums(phylogenetic.endemism.output$grid.matrix)/nrow(phylogenetic.endemism.output$grid.matrix)
 	richness <- rowSums(phylogenetic.endemism.output$grid.matrix)[which(rownames(phylogenetic.endemism.output$grid.matrix) %in% names(phylogenetic.endemism.output$PD))]
 
-	plot(phylogenetic.endemism.output$PD ~ richness[names(phylogenetic.endemism.output$PD)], pch=20, cex=0.6, main = "PE v species richness (black = observed, red = null)")
+	plot(phylogenetic.endemism.output$PD ~ richness[names(phylogenetic.endemism.output$PD)], pch=20, cex=0.6, main = "PE v species richness (black = observed, red = null)", xlab="Species richness")
 
 	cat("Generating null distributions for range of observed species richness:", "\n")
 	n <- 0
@@ -83,13 +83,14 @@ pe.null.test <- function(phylogenetic.endemism.output, nrep = 100, outlier.range
 	names(Quantile.25) <- sort(unique(richness))
 	names(Quantile.50) <- sort(unique(richness))
 
-	dev.new()
-	plot(phylogenetic.endemism.output$PD ~ richness[names(phylogenetic.endemism.output$PD)], pch=20, cex=0.1, main = "PE v species richness (black = observed, red = null IQR)")
-	points(sort(unique(richness)), Quantile.75, type="l", lwd=2, col="red")
-	points(sort(unique(richness)), Quantile.25, type="l", lwd=2, col="red")
-
-
-
+	if(plot.all) {
+	  dev.new()
+	  plot(phylogenetic.endemism.output$PD ~ richness[names(phylogenetic.endemism.output$PD)], pch=20, cex=0.5, main = "PE v spp richness (black = observed, blue = null IQR)", xlab="Species richness")
+	  points(sort(unique(richness)), Quantile.75, type="l", lwd=2, col="blue")
+	  points(sort(unique(richness)), Quantile.25, type="l", lwd=2, col="blue")
+	  polygon(c(sort(unique(richness)), rev(sort(unique(richness)))), c(Quantile.25, rev(Quantile.75)), col="lightcyan", lty = 0)
+	  points(richness[names(phylogenetic.endemism.output$PD)], phylogenetic.endemism.output$PD, pch=20, cex=0.5)
+	}
 
 	cat("Calculating outliers", "\n")
 	out.above.below <- phylogenetic.endemism.output$PD
@@ -120,16 +121,20 @@ pe.null.test <- function(phylogenetic.endemism.output, nrep = 100, outlier.range
 	out.above.below.raster[] <- NA
 	out.above.below.raster[as.numeric(names(out.above.below))] <- out.above.below
 
-	out.breaks <- c(-1.5, -0.5, 0.5, 1.5)
-	dev.new()
-	plot(out.above.below.raster, breaks=out.breaks, col=heat.colors(3), main = "Outliers - categorical")
+	if(plot.all) {
+	  out.breaks <- c(-1.5, -0.5, 0.5, 1.5)
+	  dev.new()
+	  plot(out.above.below.raster, breaks=out.breaks, col=heat.colors(3), main = "Outliers - categorical")
+	}
 
 	out.continuous.raster <- phylogenetic.endemism.output$PD_raster
 	out.continuous.raster[] <- NA
 	out.continuous.raster[as.numeric(names(out.continuous))] <- out.continuous
 
-	dev.new()
-	plot(out.continuous.raster, main = "Outliers - continuous")
+	if(plot.all) {
+	  dev.new()
+	  plot(out.continuous.raster, main = "Outliers - continuous")
+	}
 
 
 	cat("Calculating significance", "\n")
@@ -147,9 +152,11 @@ pe.null.test <- function(phylogenetic.endemism.output, nrep = 100, outlier.range
 	P.above.raster[] <- NA
 	P.above.raster[as.numeric(names(P.above))] <- P.above
 
-	p.breaks <- c(0, 0.0001, 0.001, 0.01, 0.025, 0.975, 0.99, 0.999, 0.9999, 1)
-	dev.new()
-	plot(P.above.raster, breaks=p.breaks, col=topo.colors(9), main = "Outliers - significance (e.g. higher <0.025; lower >0.975")
+	if(plot.all) {
+	  p.breaks <- c(0, 0.0001, 0.001, 0.01, 0.025, 0.975, 0.99, 0.999, 0.9999, 1)
+	  dev.new()
+	  plot(P.above.raster, breaks=p.breaks, col=topo.colors(9), main = "Outliers - significance (e.g. higher <0.025; lower >0.975")
+	}
 
 
 	cat("Collating outputs", "\n")
