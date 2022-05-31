@@ -11,7 +11,8 @@ Suggests:
     letsR,
     knitr,
     rmarkdown,
-    markdown
+    markdown,
+    ausplotsR
 Imports:
     geosphere, 
     simba, 
