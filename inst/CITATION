@@ -1,8 +1,8 @@
 bibentry(bibtype = "Manual",
          title = "{biomapME}: Biodiversity Mapping and Macroecology",
          author = person("Greg R. Guerin"),
-         year = "2020",
-         note = "R package verion 2.0",
+         year = "2022",
+         note = "R package verion 2.1",
          url = "https://github.com/GregGuerin/biomapME")
 
 
