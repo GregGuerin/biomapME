@@ -10,9 +10,10 @@ vignette: >
 ---
 
 ```{r setup, include = FALSE}
+library(knitr)
 knitr::opts_chunk$set(
   collapse = TRUE,
-  tidy.opts=list(width.cutoff=80), 
+  tidy.opts=list(width.cutoff=60), 
   tidy = 'formatR', 
   comment = "#>"
 )
@@ -22,36 +23,35 @@ knitr::opts_chunk$set(
 
 The spatial distribution of biodiversity is a topic of immense importance to understanding macroecological processes and conservation efforts based on limited resources. Biodiversity is generally concentrated into centres or hotspots characterised by high species richness. While hotspots of species richness have long been recognised, biodiverse areas can defined on the basis of more sophisticated metrics such as uniqueness or presence of threatened, range-restricted or complementary species and ecological communities.
 
-Range rarity (i.e. rarity in terms of a restricted geographic distribution rather than population numbers per se) is a major consideration for conservation planning because it informs spatial management priorities and can be estimated from readily available incidence data (Crisp et al. 2001). Measures of area of occupancy (AOO), extent of occurrence (EOO), climatic range, or landscape-scale frequency are basic conservation metrics because species with more restricted ranges are considered at greater risk of extinction and contribute to biological uniqueness.
+Range rarity (i.e., rarity in terms of a restricted geographic distribution rather than population numbers per se; Guerin & Lowe 2015a) is a major consideration for conservation planning because it informs spatial management priorities and can be estimated from readily available incidence data (Crisp et al. 2001). Measures of area of occupancy (AOO), extent of occurrence (EOO), climatic range, or landscape-scale frequency are basic conservation metrics because species with more restricted ranges are considered at greater risk of extinction and contribute to biological uniqueness (Guerin et al. 2015).
 
-Added to strictly species-based metrics are the new wave of phylogeny-based ones. Phylogenetic diversity is a measure of the evolutionary history represented by a set of species in a community or samples of species in plots or map grid cells, while phylogenetic endemism weights PD by the relative geographic range restriction of parts of that history - phylogenetic branch lengths.
+Added to strictly species-based metrics are the new wave of phylogeny-based ones. Phylogenetic diversity (PD) is a measure of the evolutionary history represented by a set of species in a community or samples of species in plots or map grid cells (Tsirogiannis et al. 2016), while phylogenetic endemism weights PD by the relative geographic range restriction of parts of that history represented by phylogenetic branch lengths (Rosauer et al. 2009; Guerin & Lowe 2015b).
 
 Biodiversity mapping as an endeavour is an empirical exercise seeking to represent patterns in species inventory data. However, this leads to immediate questions of how sampling influences the resulting patterns, especially given that large-scale biodiversity mapping studies typically use data from existing sources such as herbarium or museum records collected non-systematically and for a different purpose. Biases in the underlying data may influence the results.
 
-Sampling issues include 1) uneven and under-sampling, resulting in biased richness estimates; and 2) the correlation of many endemism or phylogenetic metrics with species richness. These factors can make it difficult to disentangle metrics from sampling intensity and species richness. Plot-based data recording species according to systematic effort criteria make it possible to use the accumulation of species to estimate actual species richness from that observed, for example via rarefaction or non-parametric estimators. However, for the purposes of identifying relative patterns of biodiversity, it is not always necessary to correct metrics for sampling: it may be more relevant to ask whether metrics are higher than expected, given the context of sampling.
+Sampling issues include: 1) uneven and under-sampling, resulting in biased richness estimates; and 2) the correlation of many endemism or phylogenetic metrics with species richness. These factors can make it difficult to disentangle metrics from sampling intensity and species richness. Plot-based data recording species according to systematic effort criteria make it possible to use the accumulation of species to estimate actual species richness from that observed, for example via rarefaction or non-parametric estimators. However, for the purposes of identifying relative patterns of biodiversity, it is not always necessary to correct metrics for sampling: it may be more relevant to ask whether metrics are higher than expected, given the context of sampling.
 
 
 ## Introduction to **biomapME**
 
 The **biomapME** R package contains a set of functions for manipulating, analysing and rasterising species inventory data for use in macroecological analysis and mapping of biodiversity metrics. The functions are primarily geared towards generating (and analysing) gridded biodiversity maps based on various metrics from species incidence (and environmental) data.
 
-This vignette demonstrates the main functionality of the package using a step-by-step workflow starting with accessing data, installing the package, and generating a set of R data objects and subsequently maps and metrics of several biodiversity metrics. The package is designed (to some degree, depending on the application) to take either plot-based species records (in the form of a species x sites matrix and associated site coordinates matrix) or individual species records (in the form of a row per species observation and columns for species name and spatial coordinates).
+This vignette demonstrates the main functionality of the package using a step-by-step workflow starting with installing the package, accessing some example data, and  subsequently generating maps of several biodiversity metrics. The package is designed (to some degree, depending on the application) to take either plot-based species records (in the form of a species x sites matrix and associated site coordinates matrix) or atlas-style individual species records (in the form of a row per species observation and columns for species name and spatial coordinates).
 
 The user can provide pre-existing raster maps if desired. If only species inventory data are available, rasters are automatically generated at the desired extent and resolution. Some site-based metrics are also calculated.
 
-This demonstration makes use of TERN Ausplots a standardised continental survey of the species composition of Australian vegetation, which approaches 800 sites in extent [www.tern.org.au](www.tern.org.au). For comparison, incidence data are also sourced from Australia's Virtual Herbarium (URL).
-
+This demonstration makes use of TERN Ausplots (Sparrow et al. 2020; Munroe et al. 2021), a standardised continental survey of the species composition of Australian vegetation, which approaches 800 sites in extent, see [www.tern.org.au](www.tern.org.au).
 
 
 ## Installation and getting started
 
-To install the latest version of **biomapME**, use the devtools package, which must be installed first (I also recommend you install dependencies first), e.g.:
+To install the latest version of **biomapME**, use the devtools package, which must be installed first (I also recommend you install dependencies first, see DESCRIPTION file), e.g.:
 
 ```
 devtools::install_github("GregGuerin/biomapME", build_vignettes = TRUE, dependencies = FALSE)
 ```
 
-For this vignette, we will use the tools of **biomapME** in conjunction with ecosystem monitoring data from TERN Ausplots, which is accessed through an API in R:
+For this vignette, we will use the tools of **biomapME** in conjunction with ecosystem monitoring data from TERN Ausplots, which is accessed through an API in R (Guerin et al. 2020):
 
 ```
 install.packages('ausplotsR')
@@ -80,9 +80,9 @@ if(class(my.ausplots) != "list") {
 ```
 
 
-The returned ```my.ausplots``` object is a list that includes as elements the data.frames ```$site.info``` and ```$veg.vouch```. We can use the former to map the sites and the latter create a species x sites matrix for further analysis:
+The returned ```my.ausplots``` object is a list that includes as elements the data.frames ```$site.info``` (site information table) and ```$veg.vouch``` (vegetation species vouchers). We can use the former to map the sites and the latter create a species x sites matrix for further analysis:
 
-```{r, fig.height = 4, fig.width = 6}
+```{r, fig.height = 4, fig.width = 6, tidy=TRUE, tidy.opts=list(width.cutoff=60)}
 #automated map generation showing IBRA bioregions:
 map_ausplots(my.ausplots)
 
@@ -95,24 +95,24 @@ my.sppBYsites <- species_table(my.ausplots$veg.vouch, m_kind="PA", species_name=
 
 The above object can now be used in conjunction with spatial coordinates in the site.info table to compute and map biodiversity metrics. To start with, we can convert these presences and absences in plots to presences and absences in map grid cells of a raster layer. As we don't have a raster to base this on, we will ask the function to create one for us and return that raster plus presence/absence scores for each species per grid cell.
 
-```{r}
+```{r, tidy=TRUE, tidy.opts=list(width.cutoff=60)}
 #species against grid cells (identified by their ID numbers in the automatically generated and returned raster):
-cell.PA <- map.pa.matrix(my.sppBYsites, records="site", site.coords=my.ausplots$site.info[my.ausplots$site.info$site_unique %in% rownames(my.sppBYsites),c("longitude", "latitude")], deg.resolution = c(2,2))
+cell.PA <- map.pa.matrix(my.sppBYsites, records="site", site.coords=my.ausplots$site.info[ my.ausplots$site.info$site_unique %in% rownames(my.sppBYsites),c("longitude", "latitude")], deg.resolution = c(2,2))
 ```
 
 ## Convert plot/site data to individual species records
 
 Next, we can use the data to generate a set of metrics relating to the size of species geographic ranges within the dataset. However, the relevant function to do that requires long format species records, so we will first need to convert our plot-based records:
 
-```{r}
-mySPPrecords <- convert.site.data(my.sppBYsites, site.coords=my.ausplots$site.info[my.ausplots$site.info$site_unique %in% rownames(my.sppBYsites),c("longitude", "latitude")])
+```{r, tidy=TRUE, tidy.opts=list(width.cutoff=60)}
+mySPPrecords <- convert.site.data(my.sppBYsites, site.coords=my.ausplots$site.info[ my.ausplots$site.info$site_unique %in% rownames(my.sppBYsites),c("longitude", "latitude")])
 ```
 
 ## Species range sizes
 
 Now, we can calculate range sizes, in this case in terms of their recorded latitudinal range:
 
-```{r}
+```{r, tidy=TRUE, tidy.opts=list(width.cutoff=60)}
 my.ranges <- spp.range.metrics(mySPPrecords, weight.type="geo", geo.calc="LAT", plot.out=FALSE, verbose=FALSE)
 
 print(my.ranges$weights[101:110])
@@ -122,16 +122,16 @@ print(my.ranges$weights[101:110])
 
 Given our range calculations above, we can now calculate and map species richness weighted by latitudinal range, using the ```weighted.endemism``` function, which by default calculates range rarity richness, or species richness weighted by the frequency of species in grid cells:
 
-```{r, fig.height = 4, fig.width = 6}
+```{r, fig.height = 4, fig.width = 6, tidy=TRUE, tidy.opts=list(width.cutoff=60)}
 #this call will map richness of grid cells inversely weighted by species latitudinal range:
-richness_lat_range_weight <- weighted.endemism(mySPPrecords, frame.raster=cell.PA$pa.raster, own.weights=my.ranges$weights[names(my.ranges$weights) %in% names(cell.PA$grid.matrix)], own.grid.matrix=cell.PA$grid.matrix, plot.raster=FALSE)
+richness_lat_range_weight <- weighted.endemism(mySPPrecords, frame.raster=cell.PA$pa.raster, own.weights=my.ranges$weights[ names(my.ranges$weights) %in% names(cell.PA$grid.matrix)], own.grid.matrix=cell.PA$grid.matrix, plot.raster=FALSE)
 plot(richness_lat_range_weight$WE_raster)
 ```
 
 
 But hang on, this is just a map of species richness with a few tweaks isn't it? How do we map cells that have higher than expected concentrations of 'latitudinally restricted' species? Let compare the results to a null model by running the returned object in the ```endemism.null.test``` function:
 
-```{r}
+```{r, tidy=TRUE, tidy.opts=list(width.cutoff=60)}
 my.null <- endemism.null.test(richness_lat_range_weight, nrep=50, plot.all=FALSE)
 
 p.breaks <- c(0, 0.0001, 0.001, 0.01, 0.025, 0.975, 0.99, 0.999, 0.9999, 1)
@@ -142,18 +142,13 @@ plot(my.null$P.above.raster, breaks=p.breaks, col=topo.colors(9), main = "Higher
 
 Next, we use the added information content in these plot-based samples (as compared to presence-only records) to value-add to our biodiversity metrics using the function ```map.multi.metrics```. This function groups field plots by the map grid cells they fall in and calculates several things - here we focus on non-parametric estimation of species richness or alpha diversity. That is, the species richness observed in each cell is probably (almost certainly!) under-estimated due to incomplete sampling, but we can use existing tools to estimate the real richness based on the number of occurrences of species in plots:
 
-```{r, fig.height = 4, fig.width = 6}
+```{r, fig.height = 4, fig.width = 6, tidy=TRUE, tidy.opts=list(width.cutoff=60)}
 #the function can also do multi-site beta diversity and estimate phylogenetic diversity based on completeness of species sampling
-estimated_richness <- map.multi.metrics(my.sppBYsites, site.coords=my.ausplots$site.info[my.ausplots$site.info$site_unique %in% rownames(my.sppBYsites),c("longitude", "latitude")], beta=FALSE, deg.resolution=c(2,2))
+estimated_richness <- map.multi.metrics(my.sppBYsites, site.coords=my.ausplots$site.info[ my.ausplots$site.info$site_unique %in% rownames(my.sppBYsites),c("longitude", "latitude")], beta=FALSE, deg.resolution=c(2,2))
 
 print(head(estimated_richness$alpha_result))
 ```
 
-But let's say we want to calculate the overall beta diversity across plots as grouped in a compositional classification.
-
-1.generate cluster tree
-2. cut and get groups
-3. redo map multi with beta and map result
 
 ## Adding phylogenetic information to mapped biodiverity metrics
 
@@ -161,7 +156,7 @@ By adding phylogenetic information, we can increase our repertoire to a wider ra
 
 For the purpose of demonstration, we will generate a random phylogenetic tree:
 
-```{r}
+```{r, tidy=TRUE, tidy.opts=list(width.cutoff=60)}
 ausplots.Rtree <- ape::rtree(n=ncol(my.sppBYsites), tip.label=colnames(my.sppBYsites)) 
 ```
 
@@ -174,7 +169,7 @@ phylogenetic.diversity.sites(my.sppBYsites[1:20,], ausplots.Rtree)
 
 We can also calculate phylogenetic diversity aggregated at grid cell level and standardise the result either according to the completeness of species sampling in the grid cells, or according to expectation for a given level of species richness. Finally we can calculate phylogenetic range rarity for grid cells and standardise that by comparing the result to a null distribution.
 
-```{r}
+```{r, tidy=TRUE, tidy.opts=list(width.cutoff=60)}
 
 #unweighted PD for grid cells:
 myPD <- phylogenetic.endemism(mySPPrecords, sep.comm.spp="none", phylo.tree=ausplots.Rtree, sep.phylo.spp="none", pe.type="unweighted", plot.raster=FALSE, own.grid.matrix=cell.PA$grid.matrix, frame.raster=cell.PA$pa.raster)
@@ -188,7 +183,7 @@ plot(myPD_rich$PD_raster)
 
 
 #PD in grid cells corrected according the to completeness of species sampling:
-PD_complete <- map.multi.metrics(my.sppBYsites, site.coords=my.ausplots$site.info[my.ausplots$site.info$site_unique %in% rownames(my.sppBYsites),c("longitude", "latitude")], beta=FALSE, phylogenetic=TRUE, phylo.tree=ausplots.Rtree, frame.raster=cell.PA$pa.raster, plot.raster=FALSE)
+PD_complete <- map.multi.metrics(my.sppBYsites, site.coords=my.ausplots$site.info[ my.ausplots$site.info$site_unique %in% rownames(my.sppBYsites),c("longitude", "latitude")], beta=FALSE, phylogenetic=TRUE, phylo.tree=ausplots.Rtree, frame.raster=cell.PA$pa.raster, plot.raster=FALSE)
 
 plot(PD_complete$phylogenetic_raster)
 
@@ -214,14 +209,18 @@ With these examples, we have seen how **biomapME** can be used to easily generat
 
 Crisp, M.D., Laffan, S., Linder, H.P. & Monro, A. (2001) Endemism in the Australian flora. *Journal of Biogeography* **28**, 183-198.
 
-Guerin, G.R., Ruokolainen, L., Lowe, A.J. (2015) A georeferenced implementation of weighted endemism. *Methods in Ecology and Evolution* **6**, 845–852.
+Guerin, G.R. & Lowe, A.J. (2015a) ‘Sum of inverse range sizes’ (SIR), a biodiversity metric with many names and interpretations. *Biodiversity and Conservation* **24**, 2877–2882.
 
-Guerin, G.R. & Lowe, A.J. (2015) Mapping phylogenetic endemism in R using georeferenced branch extents. *SoftwareX* **3-4**, 22–26.
+Guerin, G.R. & Lowe, A.J. (2015b) Mapping phylogenetic endemism in R using georeferenced branch extents. *SoftwareX* **3-4**, 22–26.
 
-Guerin, G.R. & Lowe, A.J. (2015) ‘Sum of inverse range sizes’ (SIR), a biodiversity metric with many names and interpretations. *Biodiversity and Conservation* **24**, 2877–2882.
+Guerin, G.R., Ruokolainen, L. & Lowe, A.J. (2015) A georeferenced implementation of weighted endemism. *Methods in Ecology and Evolution* **6**, 845–852.
+
+Guerin, G., Saleeba, T., Munroe, S., Blanco-Martin, B., Martín-Forés, I. & Tokmakoff, A. (2020) ausplotsR: TERN AusPlots Analysis Package. R package version 1.2. CRAN: https://cran.r-project.org/web/packages/ausplotsR/index.html. Dev: https://github.com/ternaustralia/ausplotsR. http://doi.org/10.5281/zenodo.4059195
+
+Munroe, S., Guerin, G.R., Saleeba, T., Martin-Fores, M., Blanco-Martin, B., Sparrow, B. & Tokmakoff, A. (2021) ausplotsR: An R package for rapid extraction and analysis of vegetation and soil data collected by Australia’s Terrestrial Ecosystem Research Network. *Journal of Vegetation Science* **32**, e13046.
 
 Rosauer, D., Laffan, S.W., Crisp, M.D., Donnellan, S.C. & Cook, L.G. (2009) Phylogenetic endemism: a new approach for identifying geographical concentrations of evolutionary history. *Molecular Ecology* **18**, 4061-4072.
 
 Sparrow, B., Foulkes, J., Wardle, G., Leitch, E., Caddy-Retalic, S., van Leeuwen, S., Tokmakoff, A., Thurgate, N., Guerin, G.R. and Lowe, A.J. (2020) A vegetation and soil survey method for surveillance monitoring of rangeland environments. *Frontiers in Ecology and Evolution*, 8:157.
 
-Tsirogiannis, C. & B. Sandel. (2016) PhyloMeasures: A package for computing phylogenetic biodiversity measures and their statistical moments. *Ecography* **39**, 709-714,
+Tsirogiannis, C. & B. Sandel. (2016) PhyloMeasures: A package for computing phylogenetic biodiversity measures and their statistical moments. *Ecography* **39**, 709-714.
