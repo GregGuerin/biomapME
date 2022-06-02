@@ -30,6 +30,6 @@ Imports:
     BAT,
     PhyloMeasures
 Description: R functions for generating gridded biodiversity maps from point (incidence) data.
-License: GPL-3 + file LICENSE
+License: GPL-3
 VignetteBuilder: knitr
 Encoding: UTF-8
