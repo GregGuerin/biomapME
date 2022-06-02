@@ -39,7 +39,7 @@ deg.resolution = c(0.25, 0.25), extent.vector, plot.out = TRUE)
 }
 }
 \details{
-Given a list of georeferenced (longlat) species records, calculates range metrics according to user choice of number of occupied map grid cells (from a supplied raster or one automatically generated within the function), maximum span across the range, range area (area of polygon defined by occurrences) or the longitudinal/latitudinal extent (defaulting to 1 for single records).
+Given a list of georeferenced (longlat) species records, calculates range metrics according to user choice of number of occupied map grid cells (from a supplied raster or one automatically generated within the function), maximum span across the range, range area (area of polygon defined by occurrences) or the longitudinal/latitudinal extent (defaulting to a minimum of input grid cell size).
 
 Georeferenced distance and area range metrics can be calculated longlats (default and preferred) or any coordinate set. For non-longlat coordinates, distance and area calculations assume a flat surface (longlat calcs assume curved surface). This would be appropriate for smaller areas where distance measures won't be as biased by curvature of the Earth's surface, so that the function can be used directly on data sets where species coordinates are not recorded in longlat, e.g. fine-scale locations within plots, or UTM coordinates within one map zone etc.
 }
