@@ -47,7 +47,7 @@ At present, biomapME contains functions for calculating:\cr
 \cr
 Guerin, G.R. & Lowe, A.J. (2015) Sum of inverse range-sizes ('SIR'), a biodiversity metric with many names and interpretations. \emph{Biodiversity and Conservation} \strong{24}, 2877-2882.\cr
 \cr
-Guerin, G.R. & Lowe, A. J. (2015) Mapping phylogenetic endemism in R using georeferenced branch extents. \emph{SoftwareX} \strong{3}, 22-26.
+Guerin, G.R. & Lowe, A. J. (2015) Mapping phylogenetic endemism in R using georeferenced branch extents. \emph{SoftwareX} \strong{3-4}, 22-26.
 }
 \author{Greg R. Guerin
 }
