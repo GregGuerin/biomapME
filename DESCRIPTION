@@ -31,6 +31,5 @@ Imports:
     PhyloMeasures
 Description: R functions for generating gridded biodiversity maps from point (incidence) data.
 License: GPL-3 + file LICENSE
-LazyData: TRUE
 VignetteBuilder: knitr
 Encoding: UTF-8
