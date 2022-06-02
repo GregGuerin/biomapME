@@ -37,7 +37,7 @@ Raw phylogenetic diversity/endemism scores are biased both by the completeness o
   \item{$P.above.raster }{Map of $P.above with default 2-tailed colour scheme}
   \item{$richness }{Vector of simple observed species richness scores for cells.}
 }
-\references{Guerin, G.R. and Lowe, A.J. (submitted) Mapping phylogenetic endemism in R using georeferenced branch extents.
+\references{Guerin, G.R. & Lowe, A. J. (2015) Mapping phylogenetic endemism in R using georeferenced branch extents. \emph{SoftwareX} \strong{3-4}, 22-26.
 }
 \author{Greg R. Guerin
 }
