@@ -9,7 +9,7 @@
 Package: \tab biomapME\cr
 Type: \tab Package\cr
 Version: \tab 2.1\cr
-Date: \tab 2022-05-31\cr
+Date: \tab 2021-11-26\cr
 License: \tab GPL-3\cr
 }
 biomapME is currently under active development. Additional metrics/functions/functionality are expected over time.\cr
@@ -45,7 +45,9 @@ At present, biomapME contains functions for calculating:\cr
 
 \references{Guerin, G.R., Ruokolainen, L. & Lowe, A.J. (2015) A georeferenced implementation of weighted endemism. \emph{Methods in Ecology and Evolution} \strong{6}, 845-852.\cr
 \cr
-Guerin, G.R. & Lowe, A.J. (2015) Sum of inverse range-sizes ('SIR'), a biodiversity metric with many names and interpretations. \emph{Biodiversity and Conservation} \strong{24}, 2877-2882.
+Guerin, G.R. & Lowe, A.J. (2015) Sum of inverse range-sizes ('SIR'), a biodiversity metric with many names and interpretations. \emph{Biodiversity and Conservation} \strong{24}, 2877-2882.\cr
+\cr
+Guerin, G.R. & Lowe, A. J. (2015) Mapping phylogenetic endemism in R using georeferenced branch extents. \emph{SoftwareX} \strong{3}, 22-26.
 }
 \author{Greg R. Guerin
 }
