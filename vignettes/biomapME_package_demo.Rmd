@@ -17,6 +17,7 @@ knitr::opts_chunk$set(
   tidy = 'formatR', 
   comment = "#>"
 )
+options(width=60)
 ```
 
 ## Introduction to biodiversity mapping
@@ -45,7 +46,7 @@ This demonstration makes use of TERN Ausplots (Sparrow et al. 2020; Munroe et al
 
 ## Installation and getting started
 
-To install the latest version of **biomapME**, use the devtools package, which must be installed first (I also recommend you install dependencies first, see DESCRIPTION file), e.g.:
+To install the latest version of **biomapME**, use the devtools package, which must be installed first (I also recommend you install dependencies first, see DESCRIPTION file: packages include raster (a dependency), geosphere, simba, SDMTools, ape, pracma, maps, vegan, adehabitatHR, dismo, sp, BAT and PhyloMeasures, plus knitr, rmarkdown, markdown suggested for vignette building), e.g.:
 
 ```
 devtools::install_github("GregGuerin/biomapME", build_vignettes = TRUE, dependencies = FALSE)
@@ -82,12 +83,17 @@ if(class(my.ausplots) != "list") {
 
 The returned ```my.ausplots``` object is a list that includes as elements the data.frames ```$site.info``` (site information table) and ```$veg.vouch``` (vegetation species vouchers). We can use the former to map the sites and the latter create a species x sites matrix for further analysis:
 
-```{r, fig.height = 4, fig.width = 6, tidy=TRUE, tidy.opts=list(width.cutoff=60)}
+```{r, fig.height = 4, fig.width = 7, tidy=TRUE}
 #automated map generation showing IBRA bioregions:
 map_ausplots(my.ausplots)
 
 #generate species x sites table
 my.sppBYsites <- species_table(my.ausplots$veg.vouch, m_kind="PA", species_name="SN", strip_bryophytes=TRUE)
+
+#we'll also extract a table of plot location coordinates that matches the above species table
+sites_longlat <- my.ausplots$site.info[match(rownames(my.sppBYsites), my.ausplots$site.info$site_unique),c("longitude", "latitude")]
+
+head(sites_longlat)
 ```
 
 
@@ -95,58 +101,66 @@ my.sppBYsites <- species_table(my.ausplots$veg.vouch, m_kind="PA", species_name=
 
 The above object can now be used in conjunction with spatial coordinates in the site.info table to compute and map biodiversity metrics. To start with, we can convert these presences and absences in plots to presences and absences in map grid cells of a raster layer. As we don't have a raster to base this on, we will ask the function to create one for us and return that raster plus presence/absence scores for each species per grid cell.
 
-```{r, tidy=TRUE, tidy.opts=list(width.cutoff=60)}
+```{r, tidy=TRUE}
 #species against grid cells (identified by their ID numbers in the automatically generated and returned raster):
-cell.PA <- map.pa.matrix(my.sppBYsites, records="site", site.coords=my.ausplots$site.info[ my.ausplots$site.info$site_unique %in% rownames(my.sppBYsites),c("longitude", "latitude")], deg.resolution = c(2,2))
+cell.PA <- map.pa.matrix(my.sppBYsites, records="site", site.coords=sites_longlat, deg.resolution = c(2,2))
 ```
 
 ## Convert plot/site data to individual species records
 
 Next, we can use the data to generate a set of metrics relating to the size of species geographic ranges within the dataset. However, the relevant function to do that requires long format species records, so we will first need to convert our plot-based records:
 
-```{r, tidy=TRUE, tidy.opts=list(width.cutoff=60)}
-mySPPrecords <- convert.site.data(my.sppBYsites, site.coords=my.ausplots$site.info[ my.ausplots$site.info$site_unique %in% rownames(my.sppBYsites),c("longitude", "latitude")])
+```{r, tidy=TRUE}
+mySPPrecords <- convert.site.data(my.sppBYsites, site.coords=sites_longlat)
 ```
 
 ## Species range sizes
 
 Now, we can calculate range sizes, in this case in terms of their recorded latitudinal range:
 
-```{r, tidy=TRUE, tidy.opts=list(width.cutoff=60)}
+```{r, tidy=TRUE}
 my.ranges <- spp.range.metrics(mySPPrecords, weight.type="geo", geo.calc="LAT", plot.out=FALSE, verbose=FALSE)
 
-print(my.ranges$weights[101:110])
+#let's extract a set of species weights from this object that match our existing grid cell matrix of species occurrences
+my.weights <- my.ranges$weights[names(my.ranges$weights) %in% names(cell.PA$grid.matrix)]
+
+print(my.weights[101:110])
 ```
 
 ## Range rarity richness
 
 Given our range calculations above, we can now calculate and map species richness weighted by latitudinal range, using the ```weighted.endemism``` function, which by default calculates range rarity richness, or species richness weighted by the frequency of species in grid cells:
 
-```{r, fig.height = 4, fig.width = 6, tidy=TRUE, tidy.opts=list(width.cutoff=60)}
+```{r, fig.height = 4, fig.width = 5, tidy=TRUE}
 #this call will map richness of grid cells inversely weighted by species latitudinal range:
-richness_lat_range_weight <- weighted.endemism(mySPPrecords, frame.raster=cell.PA$pa.raster, own.weights=my.ranges$weights[ names(my.ranges$weights) %in% names(cell.PA$grid.matrix)], own.grid.matrix=cell.PA$grid.matrix, plot.raster=FALSE)
-plot(richness_lat_range_weight$WE_raster)
+richness_lat_range_weight <- weighted.endemism(mySPPrecords, frame.raster=cell.PA$pa.raster, own.weights=my.weights, own.grid.matrix=cell.PA$grid.matrix, plot.raster=FALSE)
+plot(richness_lat_range_weight$WE_raster, useRaster=FALSE)
 ```
 
 
 But hang on, this is just a map of species richness with a few tweaks isn't it? How do we map cells that have higher than expected concentrations of 'latitudinally restricted' species? Let compare the results to a null model by running the returned object in the ```endemism.null.test``` function:
 
-```{r, tidy=TRUE, tidy.opts=list(width.cutoff=60)}
+```{r, tidy=TRUE}
 my.null <- endemism.null.test(richness_lat_range_weight, nrep=50, plot.all=FALSE)
+```
 
+```{r, tidy=TRUE, fig.height = 4, fig.width = 5}
 p.breaks <- c(0, 0.0001, 0.001, 0.01, 0.025, 0.975, 0.99, 0.999, 0.9999, 1)
-plot(my.null$P.above.raster, breaks=p.breaks, col=topo.colors(9), main = "Higher than expected <0.025; lower >0.975")
+
+plot(my.null$P.above.raster, breaks=p.breaks, col=topo.colors(9), main = "Higher than expected <0.025; lower >0.975", useRaster=FALSE)
 ```
 
 ## Getting fancy - multi-plot metrics within grid cells or user-defined groups
 
 Next, we use the added information content in these plot-based samples (as compared to presence-only records) to value-add to our biodiversity metrics using the function ```map.multi.metrics```. This function groups field plots by the map grid cells they fall in and calculates several things - here we focus on non-parametric estimation of species richness or alpha diversity. That is, the species richness observed in each cell is probably (almost certainly!) under-estimated due to incomplete sampling, but we can use existing tools to estimate the real richness based on the number of occurrences of species in plots:
 
-```{r, fig.height = 4, fig.width = 6, tidy=TRUE, tidy.opts=list(width.cutoff=60)}
+```{r, fig.height = 4, fig.width = 5, tidy=TRUE}
 #the function can also do multi-site beta diversity and estimate phylogenetic diversity based on completeness of species sampling
-estimated_richness <- map.multi.metrics(my.sppBYsites, site.coords=my.ausplots$site.info[ my.ausplots$site.info$site_unique %in% rownames(my.sppBYsites),c("longitude", "latitude")], beta=FALSE, deg.resolution=c(2,2))
+estimated_richness <- map.multi.metrics(my.sppBYsites, site.coords=sites_longlat, beta=FALSE, deg.resolution=c(2,2), plot.raster=FALSE)
 
 print(head(estimated_richness$alpha_result))
+
+plot(estimated_richness$alpha_raster, useRaster=FALSE)
 ```
 
 
@@ -156,7 +170,7 @@ By adding phylogenetic information, we can increase our repertoire to a wider ra
 
 For the purpose of demonstration, we will generate a random phylogenetic tree:
 
-```{r, tidy=TRUE, tidy.opts=list(width.cutoff=60)}
+```{r, tidy=TRUE}
 ausplots.Rtree <- ape::rtree(n=ncol(my.sppBYsites), tip.label=colnames(my.sppBYsites)) 
 ```
 
@@ -169,36 +183,38 @@ phylogenetic.diversity.sites(my.sppBYsites[1:20,], ausplots.Rtree)
 
 We can also calculate phylogenetic diversity aggregated at grid cell level and standardise the result either according to the completeness of species sampling in the grid cells, or according to expectation for a given level of species richness. Finally we can calculate phylogenetic range rarity for grid cells and standardise that by comparing the result to a null distribution.
 
-```{r, tidy=TRUE, tidy.opts=list(width.cutoff=60)}
+```{r, tidy=TRUE, fig.height = 4, fig.width = 5}
 
 #unweighted PD for grid cells:
 myPD <- phylogenetic.endemism(mySPPrecords, sep.comm.spp="none", phylo.tree=ausplots.Rtree, sep.phylo.spp="none", pe.type="unweighted", plot.raster=FALSE, own.grid.matrix=cell.PA$grid.matrix, frame.raster=cell.PA$pa.raster)
-plot(myPD$PD_raster)
+plot(myPD$PD_raster, useRaster=FALSE)
 
 #richness-standardised PD for cells:
 myPD_rich <- phylogenetic.endemism(mySPPrecords, phylo.tree=ausplots.Rtree, frame.raster=cell.PA$pa.raster, pe.type="unweighted", own.grid.matrix=cell.PA$grid.matrix, plot.raster=FALSE, pd.standard=TRUE, sep.comm.spp = "none", sep.phylo.spp = "none")
-plot(myPD_rich$PD_raster)
+plot(myPD_rich$PD_raster, useRaster=FALSE)
 
 ###################
 
 
 #PD in grid cells corrected according the to completeness of species sampling:
-PD_complete <- map.multi.metrics(my.sppBYsites, site.coords=my.ausplots$site.info[ my.ausplots$site.info$site_unique %in% rownames(my.sppBYsites),c("longitude", "latitude")], beta=FALSE, phylogenetic=TRUE, phylo.tree=ausplots.Rtree, frame.raster=cell.PA$pa.raster, plot.raster=FALSE)
+PD_complete <- map.multi.metrics(my.sppBYsites, site.coords=sites_longlat, beta=FALSE, phylogenetic=TRUE, phylo.tree=ausplots.Rtree, frame.raster=cell.PA$pa.raster, plot.raster=FALSE)
 
-plot(PD_complete$phylogenetic_raster)
+plot(PD_complete$phylogenetic_raster, useRaster=FALSE)
 
 
 #####
 #phylogenetic range rarity compared to a null distribution
 myPE <- phylogenetic.endemism(mySPPrecords, phylo.tree=ausplots.Rtree, frame.raster=cell.PA$pa.raster, own.grid.matrix=cell.PA$grid.matrix, plot.raster=FALSE, sep.comm.spp = "none", sep.phylo.spp = "none")
 
-plot(myPE$PD_raster)
+plot(myPE$PD_raster, useRaster=FALSE)
 
 #generate null distribution and detect outliers
 myPE.test <- pe.null.test(myPE, phylo.tree=ausplots.Rtree, nrep=25, plot.all=FALSE)
+```
 
+```{r, tidy=TRUE, fig.height = 4, fig.width = 5}
 p.breaks <- c(0, 0.0001, 0.001, 0.01, 0.025, 0.975, 0.99, 0.999, 0.9999, 1)
-plot(myPE.test$P.above.raster, breaks=p.breaks, col=topo.colors(9), main = "Higher than expected <0.025; lower >0.975")
+plot(myPE.test$P.above.raster, breaks=p.breaks, col=topo.colors(9), main = "Higher than expected <0.025; lower >0.975", useRaster=FALSE)
 ```
 
 ## Conclusion
