@@ -144,7 +144,7 @@ spp.range.metrics <- function(species_records, species="SPECIES", longitude="LON
 		  
 		  
 		  ###########################################
-		  spp_ranges <- function(x) {
+		  spp_ranges <- function(x, fram.rast=frame.raster, deg.res=deg.resolution) {
 		    n <- 0
 		    v <- rep(0, length(unique(x$SPECIES)))
 		    x$SPECIES <- sub(pattern = " ", replacement = ".", x = x$SPECIES, fixed=TRUE)
@@ -234,10 +234,10 @@ spp.range.metrics <- function(species_records, species="SPECIES", longitude="LON
 		      
 		      if(geo.calc == "LAT") {
 		        v[n] <- max(temp$LATITUDE)-min(temp$LATITUDE)
-		        if(!missing(frame.raster)) {min_lat <- res(frame.raster)[1]}
-		        if(missing(frame.raster)) {min_lat <- deg.resolution[1]}
+		        if(!missing(fram.rast)) {min_lat <- res(fram.rast)[1]}
+		        if(missing(fram.rast)) {min_lat <- deg.res[1]}
 		        if(v[n] == 0) {v[n] <- min_lat}
-		        if(v[n] < res(frame.raster)[1]) {v[n] <- min_lat}
+		        if(v[n] < min_lat) {v[n] <- min_lat}
 		      } #cls if(geo.calc =="LAT")...
 		      
 		      
